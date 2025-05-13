@@ -1,0 +1,196 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav
+    #drawer
+    class="sidenav"
+    fixedInViewport
+    [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+    [mode]="(isHandset$ | async) ? 'over' : 'side'"
+    [opened]="(isHandset$ | async) === true"
+  >
+    <mat-toolbar color="primary" class="text-center">Deliyunos</mat-toolbar>
+
+    <!-- Perfil del Usuario -->
+    <div class="profile-container text-center mt-3">
+      <div class="profile-image">
+        <img
+          src="../../../../../assets/images/profile.png"
+          alt="Profile Picture"
+          class="rounded-circle"
+          style="width: 80px; height: 80px"
+        />
+      </div>
+      <div class="profile-info mt-2">
+        <span class="profile-name"><b>Usuario:</b> {{ user.name }} {{ user.lastname }}</span>
+        <br />
+        <span class="profile-role"><b>Rol:</b> {{ user.rol }}</span>
+      </div>
+    </div>
+
+    <!-- Menú de Navegación -->
+    <div class="row w-full" [ngSwitch]="user.rol">
+      <mat-nav-list *ngSwitchCase="'Administrator'" class="nav-list">
+        <!-- Finanzas Section -->
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-icon class="icon-spacing">attach_money</mat-icon>
+            <span class="menu-title">Finanzas</span>
+          </mat-expansion-panel-header>
+          <a mat-list-item [routerLink]="'cash-flow-report'">
+            <span>Flujo De Caja</span>
+          </a>
+        </mat-expansion-panel>
+
+        <!-- Reportes Section -->
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-icon class="icon-spacing">bar_chart</mat-icon>
+            <span class="menu-title">Reportes</span>
+          </mat-expansion-panel-header>
+          <a mat-list-item [routerLink]="'orders-reports'">
+            <span>Ventas</span>
+          </a>
+        </mat-expansion-panel>
+
+        <!-- Servicios Section -->
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-icon class="icon-spacing">construction</mat-icon>
+            <span class="menu-title">Servicios</span>
+          </mat-expansion-panel-header>
+          <a mat-list-item [routerLink]="'bussines-services'">
+            <span>Servicios</span>
+          </a>
+          <a mat-list-item [routerLink]="'bussines-services-payments'">
+            <span>Pagos De Servicios</span>
+          </a>
+        </mat-expansion-panel>
+
+        <!-- Ordenes y Platillos Section -->
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-icon class="icon-spacing">restaurant_menu</mat-icon>
+            <span class="menu-title">Ordenes y Platillos</span>
+          </mat-expansion-panel-header>
+          <a mat-list-item [routerLink]="'orders'">
+            <span>Ordenes</span>
+          </a>
+          <a mat-list-item [routerLink]="'saources'">
+            <span>Platillos</span>
+          </a>
+          <a mat-list-item [routerLink]="'point-of-sale/create-order'">
+            <span>Punto De Venta</span>
+          </a>
+          <a mat-list-item [routerLink]="'categories-saources'">
+            <span>Categorías De Platillos</span>
+          </a>
+          <a mat-list-item [routerLink]="'digital-menu'">
+            <span>Menú Digital</span>
+          </a>
+        </mat-expansion-panel>
+
+        <!-- Mercancia Section -->
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-icon class="icon-spacing">shopping_cart</mat-icon>
+            <span class="menu-title">Mercancia</span>
+          </mat-expansion-panel-header>
+          <a mat-list-item [routerLink]="'merchandise-purchase'">
+            <span>Compra De Mercancia</span>
+          </a>
+          <a mat-list-item [routerLink]="'products'">
+            <span>Productos</span>
+          </a>
+        </mat-expansion-panel>
+
+        <!-- Cajas Section -->
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-icon class="icon-spacing">account_balance_wallet</mat-icon>
+            <span class="menu-title">Cajas</span>
+          </mat-expansion-panel-header>
+          <a mat-list-item [routerLink]="'cash-registers'">
+            <span>Cajas</span>
+          </a>
+          <a mat-list-item [routerLink]="'cash-register-open'">
+            <span>Apertura De Caja</span>
+          </a>
+          <a mat-list-item [routerLink]="'cash-register-close'">
+            <span>Cierre De Caja</span>
+          </a>
+        </mat-expansion-panel>
+
+        <!-- Usuarios Section -->
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-icon class="icon-spacing">people</mat-icon>
+            <span class="menu-title">Usuarios</span>
+          </mat-expansion-panel-header>
+          <a mat-list-item [routerLink]="'users'">
+            <span>Usuarios</span>
+          </a>
+          <a mat-list-item [routerLink]="'users-salaries-payments'">
+            <span>Pagos De Salarios</span>
+          </a>
+        </mat-expansion-panel>
+
+        <!-- Mesas Section -->
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-icon class="icon-spacing">table_bar</mat-icon>
+            <span class="menu-title">Mesas</span>
+          </mat-expansion-panel-header>
+          <a mat-list-item [routerLink]="'tables'">
+            <span>Mesas</span>
+          </a>
+        </mat-expansion-panel>
+
+        <!-- Logout -->
+        <a mat-list-item (click)="logout()" class="logout-button">
+          <mat-icon>logout</mat-icon>
+          <span>Cerrar Sesión</span>
+        </a>
+      </mat-nav-list>
+      <mat-nav-list *ngSwitchCase="'Waiter'" class="nav-list">
+
+
+
+        <!-- Ordenes y Platillos Section -->
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-icon class="icon-spacing">restaurant_menu</mat-icon>
+            <span class="menu-title">Ordenes y Platillos</span>
+          </mat-expansion-panel-header>
+          <a mat-list-item [routerLink]="'orders'">
+            <span>Ordenes</span>
+          </a>
+          <a mat-list-item [routerLink]="'point-of-sale/create-order'">
+            <span>Punto De Venta</span>
+          </a>
+        </mat-expansion-panel>
+
+
+        <!-- Logout -->
+        <a mat-list-item (click)="logout()" class="logout-button">
+          <mat-icon>logout</mat-icon>
+          <span>Cerrar Sesión</span>
+        </a>
+      </mat-nav-list>
+    </div>
+    
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">
+      <button
+        type="button"
+        aria-label="Toggle sidenav"
+        mat-icon-button
+        (click)="drawer.toggle()"
+        *ngIf="isHandset$"
+      >
+        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+      </button>
+      <span>Deliyunos</span>
+    </mat-toolbar>
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>

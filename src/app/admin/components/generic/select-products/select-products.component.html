@@ -1,0 +1,112 @@
+<h1 mat-dialog-title class="d-flex justify-content-center align-items-center mt-2 p-2">Productos</h1>
+<div mat-dialog-content>
+    <div class="row d-flex justify-content-center" class="w-100">
+
+
+        <!--FITERS-->
+        <div class="row d-flex justify-content-between">
+            <!--FILTERS FILES-->
+            <div class="col-12 col-sm-10 col-md-10">
+                <div class="row  d-flex justify-content-between mt-2 p-2">
+
+                    <mat-form-field class="col-12 ">
+                        <mat-label>Estatus</mat-label>
+                        <mat-select [(ngModel)]="filters.status">
+                            <mat-option *ngFor="let option of status_options" [value]="option.value">
+                                {{option.description}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field class="col-12  ">
+                        <mat-label>Creado por</mat-label>
+                        <input type="text" name="" id="" readonly [(ngModel)]="user" matInput>
+                        <button mat-icon-button matIconSuffix matTooltip="Seleccionar usuario"
+                            (click)="openDialogSelectUser('500','500')">
+                            <mat-icon>people</mat-icon>
+                        </button>
+                        <button mat-icon-button matIconSuffix matTooltip="Limpiar" (click)="clean('user')">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </mat-form-field>
+
+                    <mat-form-field class="col-12  ">
+                        <mat-label>Desde</mat-label>
+                        <input matInput [matDatepicker]="picker" [(ngModel)]="filters.start_date">
+                        <button mat-icon-button matIconSuffix matTooltip="Limpiar" (click)="clean('start_date')">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                        <mat-hint>MM/DD/AAAA</mat-hint>
+                        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+
+                    <mat-form-field class="col-12  ">
+                        <mat-label>Hasta</mat-label>
+                        <input matInput [matDatepicker]="picker1" [(ngModel)]="filters.end_date">
+                        <button mat-icon-button matIconSuffix matTooltip="Limpiar" (click)="clean('end_date')">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                        <mat-hint>MM/DD/AAAA</mat-hint>
+                        <mat-datepicker-toggle matIconSuffix [for]="picker1"></mat-datepicker-toggle>
+                        <mat-datepicker #picker1></mat-datepicker>
+                    </mat-form-field>
+
+                </div>
+            </div>
+
+            <!--SEARCH BUTTON-->
+            <div class="col-12 col-sm-2 col-md-2 d-flex justify-content-center align-items-center">
+                <button mat-fab matTooltip="Buscar" color="primary" (click)="search()">
+                    <mat-icon>search</mat-icon>
+                </button>
+            </div>
+
+        </div>
+
+        <!--PAGINATOR-->
+        <div class="row mt-2 p-2">
+            <mat-paginator #paginator class="demo-paginator" (page)="handlePageEvent($event)" [length]="length"
+                [pageSize]="pageSize" [disabled]="false" [showFirstLastButtons]="showFirstLastButtons"
+                [pageSizeOptions]="showPageSizeOptions ? pageSizeOptions : []" [hidePageSize]="hidePageSize"
+                [pageIndex]="pageIndex" aria-label="Select page">
+            </mat-paginator>
+        </div>
+
+        <!--PRODUCTS PIPE-->
+        <div class="col-12  mt-2 p-2">
+            <mat-form-field class="w-100">
+                <mat-label>Ingrese el nombre del producto</mat-label>
+                <input type="text" matInput [(ngModel)]="product_name">
+            </mat-form-field>
+        </div>
+
+        <!--PRODUCTS LIST-->
+        <div class="row mt-2 p-2 w-100">
+
+            <mat-selection-list #productsList multiple="true">
+                <mat-list-option  *ngFor="let product of products | productsPipe:product_name ;index as i ;"
+                    [value]="product">
+                    <mat-list-item>
+                        <mat-icon matListItemIcon>lunch_dining</mat-icon>
+                        <div matListItemTitle>{{product.name}}</div>
+                        <div matListItemLine>{{product.description}}</div>
+                        <div matListItemLine>{{product.status == true ? 'Activo' : 'Inactivo'}}</div>
+
+                    </mat-list-item>
+                </mat-list-option>
+
+            </mat-selection-list>
+        </div>
+
+    </div>
+</div>
+
+
+<div mat-dialog-actions class="row d-flex justify-content-center p-4">
+    <div class="col-6 d-flex justify-content-center">
+        <button mat-raised-button (click)="saveSelections(productsList)" class="w-100" color="primary">Cerrar</button>
+    </div>
+
+
+</div>

@@ -1,0 +1,81 @@
+
+<h1 mat-dialog-title class="d-flex justify-content-center align-items-center mt-2 p-2">Crear Servicio</h1>
+<div mat-dialog-content>
+
+    <!--SELECT SERVICE-->
+      <div class="col-12" *ngIf="data.service ==  undefined">
+        <mat-form-field class="w-100">
+          <mat-label>Servicio</mat-label>
+          <input type="text" readonly matInput [(ngModel)]="service_name">
+          <button mat-icon-button matTooltip="Seleccionar servicio" matIconSuffix (click)="openDialogSelectService('500','500')">
+            <mat-icon>
+              settings
+            </mat-icon>
+          </button>
+          <button mat-icon-button matTooltip="Limpiar" matIconSuffix>
+            <mat-icon>
+              delete
+            </mat-icon>
+          </button>
+        </mat-form-field>
+      </div>
+
+
+    <section>
+    <!--SERVICE DETAIL-->
+    <section class="row" >
+      <mat-list class="col-12" >
+          <mat-list-item lines="7">
+            <span matListItemTitle class="d-flex justify-content-center">
+               <b>Información General</b>
+            </span>
+            <span matListItemLine>
+               <b>Id Servicio:</b> {{service.id}}
+            </span>
+            <span matListItemLine>
+              <b>Nombre:</b> {{service.name}}
+            </span>
+            <span matListItemLine>
+              <b>Fecha De Registro:</b> {{service.registation_date}} 
+            </span>
+            <span matListItemLine>
+              <b>Estatus:</b> {{service.status == true ?  'Activo':'Inactivo'}} 
+            </span>
+            <span matListItemLine>
+              <b>Usuario:</b> {{service.user_name}}  {{service.user_last_name}}  {{service.user_second_last_name}} 
+            </span>
+          </mat-list-item>
+    </mat-list>
+    </section>
+
+
+  <span matListItemTitle class="d-flex justify-content-center">
+      <b>Pago</b>
+   </span>
+  <!--PAYMENT SECTION-->
+  <form [formGroup]="payment" class="mt-2 p-2">
+      <mat-form-field class="col-12">
+          <mat-label>Cantidad</mat-label>
+          <input type="number" matInput formControlName="amount">
+          <mat-icon matIconSuffix>
+              attach_money
+          </mat-icon>
+          <mat-error *ngIf="payment.controls.amount.hasError('required') && payment.controls.amount.touched">El campo es requerido</mat-error>
+          <mat-error *ngIf="payment.controls.amount.hasError('min') && payment.controls.amount.touched">La cantidad debe ser mayor que 0</mat-error>
+      </mat-form-field>
+  </form>
+    </section>
+    
+
+
+
+</div>
+<div mat-dialog-actions class="row d-flex justify-content-between p-4">
+  <div class="col-12 col-sm-6 col-md-6 d-flex justify-content-center">
+    <button mat-raised-button (click)="close()" class="w-100" color="primary">Cancelar</button>
+  </div>
+  <div class="col-12 col-sm-6 col-md-6 d-flex justify-content-center">
+    <button mat-raised-button (click)="pay()" class="w-100" color="primary" [disabled]="payment.status == 'INVALID' " >Registrar</button>
+  </div>
+
+</div>

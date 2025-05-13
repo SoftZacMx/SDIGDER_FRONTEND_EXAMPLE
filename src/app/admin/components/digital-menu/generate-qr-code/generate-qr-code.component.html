@@ -1,0 +1,19 @@
+<div class="row d-flex justify-content-center h-100">
+  <div class="row">
+    <h2 class="d-flex justify-content-center">Menú Digital</h2>
+  </div>
+
+  <div class="row">
+    <p class="d-flex justify-content-center  text-broken">Descarga y utiliza el código QR para que tus clientes pudan acceder al menú digital.</p>
+  </div>
+
+  <div class="row d-flex justify-content-center align-items-center mt-3 ">
+    <qrcode [qrdata]="qrData" [width]="400" class="col-12 col-sm-6 col-md-6 col-lg-6 d-flex justify-content-center align-items-center"></qrcode>
+  </div>
+
+  <div class="row d-flex justify-content-center mt-3">
+    <button mat-raised-button class="col-12 col-sm-5 col-md-5 col-lg-5" (click)="downloadQR()">
+      Descargar código QR
+    </button>
+  </div>
+</div>

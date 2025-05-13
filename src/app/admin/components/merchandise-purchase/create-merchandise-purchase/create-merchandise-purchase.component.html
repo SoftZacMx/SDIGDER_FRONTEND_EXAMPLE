@@ -1,0 +1,166 @@
+<h1 mat-dialog-title class="d-flex justify-content-center align-items-center mt-2 p-2">Nueva Compra De Mercancia</h1>
+<div mat-dialog-content>
+
+    <form [formGroup]="purchase_merchandice" class="row d-flex justify-content-center">
+        <!--CAR'S PRODUCTS-->
+        <button class="mt-2" mat-raised-button matTooltip="Seleccionar productos"
+            (click)="openDialogSelectProducts('500','500')" class="col-12 col-sm-6 col-md-6" color="primary">
+            Productos
+            <mat-icon matIconPrefix>inventory</mat-icon>
+        </button>
+
+        <div class="col-12 col-sm-12 col-lg-12">
+            <!--PRODUCST ARRAY FORM-->
+            <ng-container formArrayName="products" *ngIf="this.purchase_merchandice.controls.products.length > 0 ">
+                <h2 class="d-flex justify-content-center mt-4">
+                    Lista De Productos
+                </h2>
+            <div class="table-responsive table-striped mt-2" style="max-height: 250px;">
+                <table class="table table-hover table-sm ">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Nombre</th>
+                            <th>Cantidad</th>
+                            <th>Unidad De Medida</th>
+                            <th>Subtotal</th>
+                            <th>Total</th>
+                            <th>Eliminar</th>
+                        </tr>
+                    </thead>
+                    <tbody *ngIf="purchase_merchandice.controls.products.value.length > 0" class="p-2">
+                        <tr *ngFor="let productForm of purchase_merchandice.controls.products.controls;let i = index"
+                            [formGroupName]="i" class="">
+                            <td>
+                                {{productForm.get('id')?.value}}
+                            </td>
+                            <td>
+                                {{productForm.get('name')?.value}}
+                            </td>
+                            <td>
+                                <input type="number" formControlName="amount" matInput class="ammount_input" (ngModelChange)="setTotalPurchaseMerchandise()">
+                                <mat-error *ngIf="formGroupHasError(i,'products','ammount','min')">La cantidad debe
+                                    ser mayor que 0</mat-error>
+
+                            </td>
+                            <td>
+                                <select formControlName="unit_of_mesure">
+                                     <option *ngFor="let option of unit_of_mesure_options" [value]="option.value">
+                                         {{option.description}}
+                                     </option>
+                                </select>
+ 
+                             </td>
+                            <td>
+                                <input type="number" formControlName="subtotal" matInput class="ammount_input" (ngModelChange)="setTotalPurchaseMerchandise()">
+                                <mat-error *ngIf="formGroupHasError(i,'products','subtotal','min')">El valor debe ser
+                                    mayor que 0</mat-error>
+
+                            </td>
+                            <td>
+                                <input type="number" formControlName="total" matInput class="ammount_input" (ngModelChange)="setTotalPurchaseMerchandise()">
+                                <mat-error *ngIf="formGroupHasError(i,'products','total','min')">El valor debe ser mayor
+                                    que 0</mat-error>
+
+                            </td>
+                            <td>
+                                <button mat-mini-fab matTooltip="Eliminar" class="bg-danger ml-2"
+                                    (click)="deleteProduct(i)">
+                                    <mat-icon>delete</mat-icon>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+
+
+
+            </ng-container>
+
+            <ng-template #productsNoSelected>
+                <h2 class="d-flex justify-content-center mt-4">Sin productos seleccionados</h2>
+            </ng-template>
+        </div>
+
+        <mat-divider class="mt-4"></mat-divider>
+
+        <div class="col-12 col-sm-10 col-md-10 mt-4"
+            *ngIf="this.purchase_merchandice.controls.products.length > 0 else productsNoSelected">
+
+            <div class="row d-flex justify-content-between">
+                <mat-form-field class="col-12 col-sm-6 col-md-6 mt-2">
+                    <mat-label>Subtotal</mat-label>
+                    <input type="number" matInput formControlName="subtotal" readonly="true">
+                    <mat-icon matIconSuffix>attach_money</mat-icon>
+                    <mat-error *ngIf="purchase_merchandice.controls.subtotal.hasError('required')">El campo es
+                        requerido</mat-error>
+                    <mat-error *ngIf="purchase_merchandice.controls.subtotal.hasError('min')">El total debe ser mayor
+                        que
+                        0</mat-error>
+                </mat-form-field>
+                <mat-form-field class="col-12 col-sm-6 col-md-6 mt-2">
+                    <mat-label>Iva</mat-label>
+                    <input type="number" matInput formControlName="iva" (ngModelChange)="setTotal()" maxlength="2">
+                    <mat-icon matIconSuffix>percent</mat-icon>
+                    <mat-hint>Ingrese el iva en porcentaje</mat-hint>
+                    <mat-error *ngIf="purchase_merchandice.controls.iva.hasError('required')">El campo es
+                        requerido</mat-error>
+                    <mat-error *ngIf="purchase_merchandice.controls.iva.hasError('min')">El total debe ser mayor que
+                        0</mat-error>
+                    <mat-error *ngIf="purchase_merchandice.controls.iva.hasError('pattern')">El iva debe estar indicado
+                        en
+                        un
+                        numero entero positivo</mat-error>
+
+                </mat-form-field>
+                <mat-form-field class="col-12 col-sm-6 col-md-6 mt-2">
+                    <mat-label>Total</mat-label>
+                    <input type="number" matInput formControlName="total" readonly>
+                    <mat-icon matIconSuffix>attach_money</mat-icon>
+                    <mat-error *ngIf="purchase_merchandice.controls.total.hasError('required')">El campo es
+                        requerido</mat-error>
+                    <mat-error *ngIf="purchase_merchandice.controls.total.hasError('min')">El total debe ser mayor que
+                        0</mat-error>
+
+                </mat-form-field>
+                <mat-form-field class="col-12 col-sm-6 col-md-6 mt-2 ">
+                    <mat-label>Método De Pago</mat-label>
+                    <mat-select formControlName="payment_method">
+                        <mat-option *ngFor="let payment_method of payment_methods" [value]="payment_method.value">
+                            {{payment_method.description}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="purchase_merchandice.controls.description.hasError('required')">El campo es
+                        requerido</mat-error>
+                    <mat-error *ngIf="purchase_merchandice.controls.description.hasError('pattern')">Solo caracteres
+                        alfanuméricos</mat-error>
+                </mat-form-field>
+                <mat-form-field class="col-12 col-sm-12 col-md-12 mt-2">
+                    <mat-label>Descripción</mat-label>
+                    <textarea type="text" rows="5" matInput formControlName="description"></textarea>
+                    <mat-error *ngIf="purchase_merchandice.controls.description.hasError('pattern')">Solo caracteres
+                        alfanuméricos</mat-error>
+                    <mat-hint>{{purchase_merchandice.controls.description.value?.length}} / 500</mat-hint>
+                </mat-form-field>
+            </div>
+
+        </div>
+
+
+
+
+    </form>
+
+
+</div>
+<div mat-dialog-actions class="row d-flex justify-content-between p-4">
+    <div class="col-12 col-sm-4 col-md-4 d-flex justify-content-center">
+        <button mat-raised-button (click)="close()" class="actionButtons w-100" color="primary">Cancelar</button>
+    </div>
+    <div class="col-4 d-flex justify-content-center">
+        <button mat-raised-button (click)="create()" class="actionButtons w-100" color="primary" [disabled]="purchase_merchandice.status == 'INVALID' ">Registrar</button>
+    </div>
+
+</div>

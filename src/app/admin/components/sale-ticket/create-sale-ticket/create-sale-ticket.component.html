@@ -1,0 +1,60 @@
+
+
+
+
+<h1 mat-dialog-title class="d-flex justify-content-center align-items-center mt-2 p-2">Ticket De Venta</h1>
+<div mat-dialog-content>
+    <div class="row d-flex justify-content-center" id="ticket-data">
+        <div class="col-12 d-flex mt-2 p-2 d-flex justify-content-center">
+            <h1 class="d-flex justify-content-center align-items-center">Deliyunos</h1>
+        </div>
+        <hr>
+        <div class="col-12 d-flex flex-column align-items-center">
+     
+            <p><b>Fecha:</b> {{date}}</p>
+            <p><b>Usuario:</b> {{user}}</p>
+            <p><b>Folio De Venta:</b> {{order.id}}</p>
+            <p><b>Mesa:</b> {{order.number_table == '0' ? 'Sin mesa' : order.number_table}}</p>
+
+        </div>
+        <hr>
+        <div class="col-12" >
+            <h3 class="d-flex justify-content-center"><b>Platillos</b></h3>
+            <ul  style="padding: 0px!important;">
+                <li *ngFor="let saource of order.saources" >
+                    <i>
+                        <p><b>Platillo:</b> {{saource.name}} </p>
+                        <p><b>Precio:</b> {{saource.unite_price}} | <b>Cantidad:</b> {{saource.amount}} | <b>Total:</b> {{saource.unite_price * saource.amount | currency}}</p>
+                    </i>
+                    <hr>
+                </li>
+            </ul>
+        </div>
+        <div class="col-12 mt-4 d-flex flex-column align-items-center">
+            <i>
+                <p style="font-size: 18px; font-weight: 600;">Subtotal: {{order.subtotal|currency}}</p>
+            </i>
+            <i>
+                <p style="font-size: 18px; font-weight: 600;">Iva: {{order.iva|currency}}</p>
+            </i>
+            <i>
+                <p style="font-size: 18px; font-weight: 600;">Propina: {{order.tip|currency}}</p>
+            </i>
+            <i>
+                <p style="font-size: 18px; font-weight: 600;">Total: {{order.total|currency}}</p>
+            </i>
+        </div>
+    </div>
+</div>
+
+
+<div mat-dialog-actions class="row d-flex justify-content-between p-4">
+    <div class="col-12 col-sm-6 col-md-6 d-flex justify-content-center">
+        <button mat-raised-button (click)="print()" class="w-100" color="primary">Imprimir</button>
+    </div>
+    <div class="col-12 col-sm-6 col-md-6 d-flex justify-content-center">
+        <button mat-raised-button (click)="close()" class="w-100" color="primary">Cerrar</button>
+    </div>
+
+
+</div>

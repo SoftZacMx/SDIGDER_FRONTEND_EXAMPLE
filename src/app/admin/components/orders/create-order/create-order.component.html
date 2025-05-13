@@ -1,0 +1,216 @@
+<div class="row w-100 p-2">
+    <!--TITLE-->
+    <div class="row w-100 d-flex justify-content-between p-2">
+        <div class="col-12 d-flex justify-content-center align-items-center">
+            <h2 style="font-weight: 600;" class="d-flex align-items-center">Punto De Venta</h2>
+        </div>
+        <div class="col-12 col-md-12 d-flex justify-content-around">
+            <b><span>Fecha: {{date}}</span></b>
+            <b><span>Usuario: {{agent.name}} {{agent.lastname}}</span></b>
+            <b><span>Rol: {{agent.rol == 'Waiter' ? 'Mesero' : null }}</span></b>
+        </div>
+    </div>
+
+    <!--CAR SECTION-->
+    <section class="car_resum col-12 col-md-12 p-1 ">
+
+        <!--SEARCH PRODUCT INPUT AND ADD PRODUCT BUTTON-->
+        <div class="row w-100 d-flex justify-content-between mt-4">
+
+            <div class="col-12  d-flex justify-content-end ">
+                <button mat-fab class="bg-blue-main " matTooltip="Agregar producto"
+                    (click)="openDialogSelectSaource('500','500')">
+                    <mat-icon>add</mat-icon>
+                </button>
+            </div>
+
+        </div>
+
+        <!--CAR'S PRODUCTS-->
+        <form [formGroup]="sale" *ngIf="sale.controls.products.value.length > 0" class="mt-4">
+
+            <!--PRODUCST ARRAY FORM-->
+            <ng-container formArrayName="products">
+                <div class="table-responsive" style="max-height: 250px;">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Cantidad</th>
+                                <th>Precio Unitario</th>
+                                <th>Subtotal</th>
+                                <th>Total</th>
+                                <th>Nota</th>
+                                <th>Editar</th>
+                                <th>Eliminar</th>
+                            </tr>
+                        </thead>
+                        <tbody *ngIf="sale.controls.products.value.length > 0" class="p-2">
+                            <tr *ngFor="let productForm of sale.controls.products.controls;let i = index"
+                                [formGroupName]="i" class="">
+ 
+                                <td>
+                                    {{productForm.get('name')?.value}}
+
+                                </td>
+                                <td>
+                                    <input type="number" formControlName="ammount" matInput class="ammount_input"
+                                        (change)="setTotal(i,'products','ammount')">
+                                    <mat-error *ngIf="formGroupHasError(i,'products','ammount','min')">La cantidad debe
+                                        ser mayor que 0</mat-error>
+
+                                </td>
+                                <td>
+                                    <input type="text" formControlName="price" matInput class="ammount_input"
+                                        (change)="setTotal(i,'products','ammount')">
+
+                                </td>
+                                <td>
+                                    {{productForm.get('subtotal')?.value | currency}}
+                                </td>
+                                <td>
+                                    {{productForm.get('total')?.value | currency}}
+                                </td>
+                                <td>
+                                    <textarea formControlName="note"></textarea>
+                                </td>
+                                <td>
+                                    <button mat-mini-fab matTooltip="Editar" class="action-table-button"
+                                        (click)="enableEditEelement(i)">
+                                        <mat-icon>edit</mat-icon>
+                                    </button>
+
+                                </td>
+                                <td>
+                                    <button mat-mini-fab matTooltip="Eliminar" class="action-table-button"
+                                        (click)="deleteProduct(i)">
+                                        <mat-icon>delete</mat-icon>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+
+
+
+            </ng-container>
+
+        </form>
+
+        <div class="row w-100 d-flex justify-content-center mt-4" *ngIf="sale.controls.products.value.length == 0">
+            <h2 style="font-weight: 600;" class="d-flex justify-content-center">No hay platillos seleccionados</h2>
+        </div>
+
+        <mat-divider class="mt-4"></mat-divider>
+
+        <!--RESUM SALE SECTION-->
+        <section class="sale_resum col-12 col-md-12 mt-4">
+            <form [formGroup]="sale">
+
+                <div class="row  d-flex p-1">
+
+                    <!--PAYMENT SECTION-->
+                    <section class="col-12 col-sm-12 col-md-12 d-flex mt-4 ">
+
+                        <div class="row d-flex justify-content-between p-2 w-100">
+
+                            <mat-form-field appearance="fill" class="col-12 col-sm-4 col-md-4 col-lg-4 mt-2">
+                                <mat-label>Mesa</mat-label>
+                                <input type="text" readonly [formControl]="table" matInput>
+                                <button mat-icon-button matIconSuffix matTooltip="Seleccione una mesa"
+                                    (click)="openDialogSelectTable('500','500')"
+                                    [disabled]="sale.controls.origin.value == 'Order' ">
+                                    <mat-icon>
+                                        <img src="../../../../../assets/images/table.png" alt="">
+                                    </mat-icon>
+                                </button>
+                                <button mat-icon-button matIconSuffix (click)="clean('table')" matTooltip="Limpiar"
+                                    [disabled]="sale.controls.origin.value == 'Order' ">
+                                    <mat-icon>
+                                        delete
+                                    </mat-icon>
+                                </button>
+
+                            </mat-form-field>
+
+                            <mat-form-field appearance="fill" class="col-12 col-sm-4 col-md-4 col-lg-4 mt-2">
+                                <mat-label>Origen</mat-label>
+                                <mat-select formControlName="origin" (selectionChange)="evaluateOrigin()">
+                                    <mat-option *ngFor="let origin of origin_options" [value]="origin.value">
+                                        {{origin.decription}}
+                                    </mat-option>
+
+                                </mat-select>
+                                <mat-icon matIconSuffix matTooltip="Seleccione el origen de la orden">
+                                    trip_origin
+                                </mat-icon>
+
+                            </mat-form-field>
+
+                            <mat-form-field appearance="fill" class="col-12 col-sm-4 col-md-4 col-lg-4 mt-2">
+                                <mat-label>Cliente</mat-label>
+                                <input type="text" matInput formControlName="client">
+                                <mat-error *ngIf="sale.controls.client.hasError('required')">El nombre del cliente es
+                                    requerido</mat-error>
+                            </mat-form-field>
+
+                            <mat-form-field appearance="fill" class="col-12 col-sm-4 col-md-4 col-lg-4 mt-2">
+                                <mat-label>Nota</mat-label>
+                                <textarea type="text" matInput formControlName="note"></textarea>
+                            </mat-form-field>
+
+
+                        </div>
+
+                    </section>
+
+
+                    <!--SALE INFO RESUM-->
+                    <div class="col-12  d-flex  align-items-center justify-content-between mt-4">
+                        <div class="row w-100">
+                            <div class="col-12 col-sm-3 col-md-3 col-lg-3 d-flex justify-content-center">
+                                <p class="sale_info_resum_data"><b>Subtotal:</b> {{sale.controls.subtotal.value |
+                                    currency}}
+                                </p>
+                            </div>
+                            <div class="col-12 col-sm-3 col-md-3 col-lg-3 d-flex justify-content-center">
+                                <p class="sale_info_resum_data"><b>Iva:</b> {{sale.controls.iva.value | currency}} </p>
+
+                            </div>
+                            <div class="col-12 col-sm-3 col-md-3 col-lg-3 d-flex justify-content-center">
+                                <p class="sale_info_resum_data"><b>Total:</b> {{sale.controls.total.value | currency}}
+                                </p>
+
+                            </div>
+                            <div class="col-12 col-sm-3 col-md-3 col-lg-3 d-flex justify-content-center">
+                                <p class="sale_info_resum_data"><b>Propina:</b> {{this.tip_ammount| currency}} </p>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <section class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-content-center mt-4">
+                        <button mat-raised-button id="pay_button" [disabled]="sale.status == 'INVALID' "
+                            (click)="create()">
+                            Realizar Orden
+                            <mat-icon matIconSuffix class="text-success">check</mat-icon>
+                        </button>
+
+                    </section>
+
+
+
+
+
+                </div>
+            </form>
+        </section>
+
+    </section>
+
+
+
+</div>
+

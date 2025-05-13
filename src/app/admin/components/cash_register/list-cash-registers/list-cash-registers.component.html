@@ -1,0 +1,136 @@
+    
+    <!--CREATE CASH REGISTER-->
+    <section class="row d-flex justify-content-center mt-2 p-2">
+        <div class="col-12 col-md-4">
+            <button mat-raised-button color="primary" class="w-100" (click)="openDialogCreateCashRegister('500','500')">
+                Nueva Caja
+            </button>
+        </div>
+    </section>
+
+    <!--FILTERS SECTION-->
+    <section class="row w-100 d-flex justify-content-between p-2 mt-2">
+
+        <!--FILTERS-->
+        <div class="col-12 col-md-10 d-flex justify-content-center align-items-center">
+
+            <div class="row w-100 d-flex justify-content-between">
+
+
+                <mat-form-field class="col-12 col-sm-6 col-md-6">
+                    <mat-label>Desde</mat-label>
+                    <input matInput [matDatepicker]="picker" [(ngModel)]="filters.start_date">
+                    <mat-hint>MM/DD/YYYY</mat-hint>
+                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                    <button mat-icon-button matIconSuffix (click)="clean('end_date')">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </mat-form-field>
+
+                <mat-form-field class="col-12 col-sm-6 col-md-6">
+                    <mat-label>Hasta</mat-label>
+                    <input matInput [matDatepicker]="picker1" [(ngModel)]="filters.end_date">
+
+                    <mat-hint>MM/DD/YYYY</mat-hint>
+                    <mat-datepicker-toggle matIconSuffix [for]="picker1"></mat-datepicker-toggle>
+                    <mat-datepicker #picker1></mat-datepicker>
+                    <button mat-icon-button matIconSuffix (click)="clean('end_date')">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </mat-form-field>
+
+                <mat-form-field class="col-12 col-sm-6 col-md-6">
+                    <mat-label>Usuario</mat-label>
+                    <input type="text" name="" id="" readonly [(ngModel)]="user" matInput>
+                    <button mat-icon-button matIconSuffix matTooltip="Seleccionar usuario" (click)="openDialogSelectUser('500','500')">
+                        <mat-icon>people</mat-icon>
+                    </button>
+                    <button mat-icon-button matIconSuffix matTooltip="Limpiar" (click)="clean('user')">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </mat-form-field>
+
+
+                <mat-form-field class="col-12 col-sm-6 col-md-6">
+                    <mat-label>Status</mat-label>
+                    <mat-select [(ngModel)]="filters.status">
+                        <mat-option *ngFor="let option of status_options" [value]="option.value">
+                            {{option.description}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+            </div>
+
+
+        </div>
+
+        <!--SEARCH BUTTON-->
+        <div class="col-12 col-md-2 d-flex justify-content-center align-items-center">
+            <button mat-fab color="primary" (click)="search()">
+                <mat-icon matTooltip="Buscar">search</mat-icon>
+            </button>
+        </div>
+
+    </section>
+
+    <!--PAGINATOR-->
+    <section class="col-12 mt-2 p-2">
+        <mat-paginator [length]="length" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
+            aria-label="Select page" (page)="handlePageEvent($event)">
+        </mat-paginator>
+
+    </section>
+
+    <!--FILTER USER PIPE-->
+    <section class="row w-100 mt-2 p-2">
+        <div class="col-12">
+            <mat-form-field class="w-100">
+                <mat-label>Nombre</mat-label>
+                <input type="text" matInput [(ngModel)]="user_name">
+            </mat-form-field>
+        </div>
+    </section>
+
+    <!--CASH REGISTERS DATA TABLE-->
+    <div class="row">
+        <div class="col-12 table-responsive" *ngIf="cashsRegister.length > 0; else noCashRegisters">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Id De Caja</th>
+                        <th>Usuario</th>
+                        <th>Fecha De Asignación</th>
+                        <th>Estatus</th>
+                        <th>Editar</th>
+                        <th>Eliminar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let cash_register of cashsRegister" >
+                        <td>{{cash_register.id}}</td>
+                        <td>{{cash_register.name}} {{cash_register.last_name}} {{cash_register.second_last_name}}</td>
+                        <td>{{cash_register.assignment_date}}</td>
+                        <td>{{cash_register.status == true ? 'Activo':'Inactivo'}}</td>
+                        <td>
+                            <button mat-fab (click)="openDialogEditCashRegister('500','500',cash_register)" matTooltip="Editar" color="primary">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                        </td>
+                        <td>
+                            <button mat-fab matTooltip="Eliminar" color="primary" (click)="deleteOrder(cash_register.id!)">
+                                <mat-icon>delete</mat-icon>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <ng-template #noCashRegisters>
+            <div class="row mt-2 p-2">
+                <h2 class="d-flex justify-content-center align-items-center">Sin resultados</h2>
+            </div>
+        </ng-template>
+    </div>
+

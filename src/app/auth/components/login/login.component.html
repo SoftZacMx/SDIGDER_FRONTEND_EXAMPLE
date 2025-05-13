@@ -1,0 +1,50 @@
+<section class="row h-100 d-flex align-items-center ">
+
+
+    <section class="logoSection col-12 flex-column d-flex align-items-center">
+        <div class="col-12 d-flex justify-content-center">
+            <img src="../../../../assets/images/food.png" alt="Logo image">
+        </div>
+        <div class="col-12 d-flex justify-content-center">
+            <h2>SIDGDER</h2>
+        </div>
+    </section>
+
+
+
+
+    <section class="userLoginInfoSection col-12 d-flex align-items-center justify-content-center">
+        <!--USER DATA FORM-->
+            <form action="" [formGroup]="user_data" class="row w-100 d-flex flex-column align-items-center" >
+
+                <!--EMAIL-->
+                <mat-form-field class="col-12 col-md-6" >
+                    <mat-label>Correo</mat-label>
+                    <input type="text" formControlName="email" matInput>
+                    <mat-error *ngIf="user_data.controls.email.hasError('required')">El campo es requerido</mat-error>
+                    <mat-error *ngIf="user_data.controls.email.hasError('email')">Ingrese un correo valido</mat-error>
+                </mat-form-field>
+    
+                <!--PASSWORD-->
+                <mat-form-field class="col-12 col-md-6" >
+                    <mat-label>Contraseña</mat-label>
+                    <input type="password" formControlName="password" matInput>
+                    <mat-error *ngIf="user_data.controls.password.hasError('required')">El campo es requerido</mat-error>
+                    <mat-error *ngIf="user_data.controls.password.hasError('min')">La contraseña debe tener mínimo 5 caracteres</mat-error>
+                </mat-form-field>
+    
+                <!--FORGOT PASSWORD-->
+                <div class="col-12 d-flex justify-content-center">
+                    <a (click)=" redirect() ">¿Olvidaste tu contraseña?</a>
+                </div>
+    
+                <!--ACTION BUTTONS-->
+                <div class="row w-100 mt-4 d-flex justify-content-center">
+                    <button mat-raised-button class="col-12 col-md-6" [disabled]="user_data.status == 'INVALID' " (click)="login()" color="primary">Iniciar Sesión</button>
+                </div>
+                
+            </form>
+    </section>
+
+
+</section>

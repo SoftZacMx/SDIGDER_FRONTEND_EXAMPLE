@@ -1,0 +1,380 @@
+<div class="row w-100 p-2">
+    <!--TITLE-->
+    <div class="row w-100 d-flex justify-content-between p-2">
+        <div class="col-12 d-flex justify-content-center align-items-center">
+            <h2 style="font-weight: 600;" class="d-flex align-items-center">Punto De Venta</h2>
+        </div>
+        <div class="col-12 col-md-12 d-flex justify-content-around">
+            <b><span>Fecha: {{date}}</span></b>
+            <b><span>Usuario: {{agent.name}} {{agent.lastname}}</span></b>
+            <b><span>Rol: {{agent.rol == 'Waiter' ? 'Mesero' : null }}</span></b>
+        </div>
+    </div>
+
+    <!--CAR SECTION-->
+    <section class="car_resum col-12 col-md-12 p-1 ">
+
+        <!--SEARCH PRODUCT INPUT AND ADD PRODUCT BUTTON-->
+        <div class="row w-100 mt-4 d-flex justify-content-between mt-4">
+
+            <div class="col-12 d-flex justify-content-end ">
+                <button mat-fab color="primary" matTooltip="Agregar producto"
+                    [disabled]="true"
+                    (click)="openDialogSelectSaource('500','500')">
+                    <mat-icon>add</mat-icon>
+                </button>
+            </div>
+
+        </div>
+
+        <!--CAR'S PRODUCTS-->
+        <form [formGroup]="sale" *ngIf="sale.controls.products.value.length > 0" class="mt-4">
+
+            <!--PRODUCST ARRAY FORM-->
+            <ng-container formArrayName="products">
+                <div class="table-responsive" style="max-height: 250px;">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Nombre</th>
+                                <th>Cantidad</th>
+                                <th>Precio Unitario</th>
+                                <th>Iva Del Producto</th>
+                                <th>Iva Total</th>
+                                <th>Subtotal</th>
+                                <th>Total</th>
+                                <th>Notas</th>
+
+
+                            </tr>
+                        </thead>
+                        <tbody *ngIf="sale.controls.products.value.length > 0" class="p-2">
+                            <tr *ngFor="let productForm of sale.controls.products.controls;let i = index"
+                                [formGroupName]="i" class="">
+                                <td>
+                                    {{productForm.get('id')?.value}}
+                                </td>
+                                <td>
+                                    {{productForm.get('name')?.value}}
+
+                                </td>
+                                <td>
+                                    <input type="number" formControlName="ammount" matInput class="ammount_input"
+                                        (change)="setTotal(i,'products','ammount')"
+                                        readonly="true"
+                                        >
+                                    <mat-error *ngIf="formGroupHasError(i,'products','ammount','min')">La cantidad debe
+                                        ser mayor que 0</mat-error>
+
+                                </td>
+                                <td>
+                                    <input type="text" formControlName="price" matInput class="ammount_input"
+                                        (change)="setTotal(i,'products','ammount')">
+
+                                <td>
+                                    {{productForm.get('iva')?.value | currency}}
+                                </td>
+                                <td>
+                                    {{productForm.get('total_iva_ammount')?.value | currency}}
+                                </td>
+                                <td>
+                                    {{productForm.get('subtotal')?.value | currency}}
+                                </td>
+                                <td>
+                                    {{productForm.get('total')?.value | currency}}
+                                </td>
+                                <td>
+                                    <textarea formControlName="note" readonly="true"></textarea>
+                                </td>
+
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+
+
+
+            </ng-container>
+
+        </form>
+
+        <div class="row w-100 d-flex justify-content-center mt-4" *ngIf="sale.controls.products.value.length == 0">
+            <h2 style="font-weight: 600;" class="d-flex justify-content-center">No hay platillos seleccionados</h2>
+        </div>
+
+        <mat-divider class="mt-4"></mat-divider>
+
+        <!--RESUM SALE SECTION-->
+        <section class="sale_resum col-12 col-md-12 mt-4">
+            <form [formGroup]="sale">
+
+                <div class="row  d-flex p-1">
+
+
+                    <!--SALE INFO RESUM-->
+                    <div class="col-12  d-flex  align-items-center justify-content-between mt-4">
+                        <div class="row w-100">
+                            <div class="col-12 col-sm-3 col-md-3 col-lg-3 d-flex justify-content-center">
+                                <p class="sale_info_resum_data"><b>Subtotal:</b> {{sale.controls.subtotal.value |
+                                    currency}}
+                                </p>
+                            </div>
+                            <div class="col-12 col-sm-3 col-md-3 col-lg-3 d-flex justify-content-center">
+                                <p class="sale_info_resum_data"><b>Iva:</b> {{sale.controls.iva.value | currency}} </p>
+
+                            </div>
+                            <div class="col-12 col-sm-3 col-md-3 col-lg-3 d-flex justify-content-center">
+                                <p class="sale_info_resum_data"><b>Total:</b> {{sale.controls.total.value | currency}}
+                                </p>
+
+                            </div>
+                            <div class="col-12 col-sm-3 col-md-3 col-lg-3 d-flex justify-content-center">
+                                <p class="sale_info_resum_data"><b>Propina:</b> {{this.tip_ammount| currency}} </p>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!--PAYMENT SECTION-->
+                    <section class="col-12 col-sm-12 col-md-12 mt-4 ">
+
+                        <div class="row d-flex justify-content-between" *ngIf="!sale.controls.differ_payment.value">
+
+
+                            <mat-form-field appearance="fill" class="col-12 col-sm-6 col-md-6 col-lg-6 mt-2">
+                                <mat-label>Diferir pago</mat-label>
+                                <mat-select formControlName="differ_payment" (selectionChange)="setDifferPaymentOption()">
+                                    <mat-option *ngFor="let option of differ_options" [value]="option.value">
+                                        {{option.description}}
+                                    </mat-option>
+
+                                </mat-select>
+                                <mat-icon matIconSuffix matTooltip="Seleccione el origen de la orden">
+                                    request_quote
+                                </mat-icon>
+
+                            </mat-form-field>
+
+                            <mat-form-field class="col-12 col-sm-6 col-md-6 col-lg-6 mt-2">
+                                <mat-label>Método De Pago</mat-label>
+                                <mat-select formControlName="payment_method" (selectionChange)="setPaymentMethod()">
+                                    <mat-option [value]="0">
+                                        Sin método de pago
+                                    </mat-option>
+                                    <mat-option *ngFor="let option of payment_options" [value]="option.value">
+                                        {{option.description}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+
+
+                            <mat-form-field appearance="fill" class="col-12 col-sm-6 col-md-6 col-lg-6 mt-2" *ngIf="sale.controls.origin.value == 'Pedido' ">
+                                <mat-label>Mesa</mat-label>
+                                <input type="text" readonly [formControl]="table" matInput>
+                                <button mat-icon-button matIconSuffix matTooltip="Seleccione una mesa"
+                                    (click)="openDialogSelectTable('500','500')" disabled="true">
+                                    <mat-icon>
+                                        <img src="../../../../../assets/images/table.png" alt="">
+                                    </mat-icon>
+                                </button>
+                                <button mat-icon-button matIconSuffix (click)="clean('table')" matTooltip="Limpiar"
+                                    disabled="true">
+                                    <mat-icon>
+                                        delete
+                                    </mat-icon>
+                                </button>
+
+                            </mat-form-field>
+
+                            <mat-form-field appearance="fill" class="col-12 col-sm-6 col-md-6 col-lg-6 mt-2">
+                                <mat-label>Origen</mat-label>
+                                <mat-select formControlName="origin">
+                                    <mat-option *ngFor="let origin of origin_options" [value]="origin.value">
+                                        {{origin.decription}}
+                                    </mat-option>
+
+                                </mat-select>
+                                <mat-icon matIconSuffix matTooltip="Seleccione el origen de la orden">
+                                    trip_origin
+                                </mat-icon>
+
+                            </mat-form-field>
+
+                            <mat-form-field appearance="fill" class="col-12 col-sm-6 col-md-6 col-lg-4 mt-2"
+                                *ngIf="sale.controls.origin.value == 'Order' ">
+                                <mat-label>Cliente</mat-label>
+                                <input type="text" matInput formControlName="client">
+                                <mat-error *ngIf="sale.controls.client.hasError('required')">El nombre del cliente es
+                                    requerido</mat-error>
+                            </mat-form-field>
+
+                            <mat-form-field appearance="fill" class="col-12 col-sm-6 col-md-6 col-lg-6 mt-2">
+                                <mat-label>Propina</mat-label>
+                                <input type="number" formControlName="tip" matInput (change)="addTip()">
+                                <mat-icon matIconSuffix>
+                                    percent
+                                </mat-icon>
+                            </mat-form-field>
+
+                            
+                            <mat-form-field appearance="fill" class="col-12 col-sm-6 col-md-6 col-lg-6 mt-2">
+                                <mat-label for="payed">Por pagar</mat-label>
+                                <input type="number" [formControl]="rest_to_pay" readonly matInput>
+                                <mat-icon matIconSuffix>monetization_on</mat-icon>
+
+                            </mat-form-field>
+
+                            <mat-form-field appearance="fill" class="col-12 col-sm-6 col-md-6 col-lg-6 mt-2 p-2">
+                                <mat-label for="payed">Entregado</mat-label>
+                                <input type="number" [formControl]="delivered" id="payed" matInput
+                                    (change)="calculateChange()">
+                                <mat-icon matIconSuffix>payments</mat-icon>
+                                <mat-error *ngIf="delivered.hasError('min') && delivered.touched">El la cantidad
+                                    entregada
+                                    no puede ser menor que {{total}}</mat-error>
+                                <mat-error *ngIf="delivered.hasError('required') && delivered.touched">El campo es
+                                    requerido</mat-error>
+                                <mat-error *ngIf="delivered.hasError('max') && delivered.touched">El campo no puede ser
+                                    mayot al total</mat-error>
+
+                            </mat-form-field>
+
+
+                            <mat-form-field appearance="fill" class="col-12 col-sm-6 col-md-6 col-lg-6 mt-2">
+                                <mat-label for="payed">Cambio</mat-label>
+                                <input type="number" [formControl]="change" matInput readonly>
+                                <mat-icon matIconSuffix>currency_exchange</mat-icon>
+                            </mat-form-field>
+
+
+
+                        </div>
+
+                        <!--DIFFER PAYMENT SECTION-->
+                        <div class="row d-flex justify-content-between" *ngIf="sale.controls.differ_payment.value">
+
+
+
+                            <mat-form-field appearance="fill" class="col-12 col-sm-4 col-md-4 col-lg-4 mt-2">
+                                <mat-label>Diferir pago</mat-label>
+                                <mat-select formControlName="differ_payment" (selectionChange)="setDifferPaymentOption()">
+                                    <mat-option *ngFor="let option of differ_options" [value]="option.value">
+                                        {{option.description}}
+                                    </mat-option>
+
+                                </mat-select>
+                                <mat-icon matIconSuffix matTooltip="Seleccione el origen de la orden">
+                                    request_quote
+                                </mat-icon>
+
+                            </mat-form-field>
+
+                            <!--FIRST PAYMENT METHOD-->
+                            <div class="col-12">
+                                <h2 class="d-flex justify-content-start">Primer forma de pago</h2>
+
+                                <div class="row d-flex justify-content-between">
+
+                                    <mat-form-field class="col-12 col-sm-4 col-md-4 col-lg-4">
+                                        <mat-label>Método De Pago</mat-label>
+                                        <mat-select formControlName="first_payment_differ_payment_method" (selectionChange)="sale.controls.first_payment_differ_rest_to_pay.setValue(sale.controls.total.value)">
+                                            <mat-option *ngFor="let option of payment_options" [value]="option.value">
+                                                {{option.description}}
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="sale.controls.first_payment_differ_payment_method.hasError('required') && sale.controls.first_payment_differ_payment_method.touched">El campo es requerido</mat-error>
+
+                                    </mat-form-field>
+
+                                    <mat-form-field class="col-12 col-sm-4 col-md-4 col-lg-4">
+                                        <mat-label>Restante</mat-label>
+                                        <input type="number" matInput readonly="true" formControlName="first_payment_differ_rest_to_pay" >
+                                        <mat-error *ngIf="sale.controls.first_payment_differ_rest_to_pay.hasError('required') && sale.controls.first_payment_differ_rest_to_pay.touched">El campo es requerido</mat-error>
+                                        <mat-error *ngIf="sale.controls.first_payment_differ_rest_to_pay.hasError('min') && sale.controls.first_payment_differ_rest_to_pay.touched">El debe ser mayor que 0</mat-error>
+                                        <mat-error *ngIf="sale.controls.first_payment_differ_rest_to_pay.hasError('max') && sale.controls.first_payment_differ_rest_to_pay.touched">El monto no puede ser igual al total</mat-error>
+
+                                    </mat-form-field>
+
+
+                                    <mat-form-field class="col-12 col-sm-4 col-md-4 col-lg-4" >
+                                        <mat-label>Entregado</mat-label>
+                                        <input type="number" matInput formControlName="first_payment_differ_delivered" (change)="differCalculateRestToPay()">
+                                        <mat-error *ngIf="sale.controls.first_payment_differ_delivered.hasError('required') && sale.controls.first_payment_differ_delivered.touched">El campo es requerido</mat-error>
+                                        <mat-error *ngIf="sale.controls.first_payment_differ_delivered.hasError('min') && sale.controls.first_payment_differ_delivered.touched">El monto debe ser mayor que 0</mat-error>
+                                        <mat-error *ngIf="sale.controls.first_payment_differ_delivered.hasError('max') && sale.controls.first_payment_differ_delivered.touched">El monto no puede ser igual o mayor al total</mat-error>
+
+                                    </mat-form-field>
+
+
+                                </div>
+
+                            </div>
+
+                            <!--SECOND PAYMENT METHOD-->
+                            <div class="col-12">
+                                <h2 class="d-flex justify-content-start">Segunda forma de pago</h2>
+                                <div class="row d-flex justify-content-between">
+
+                                    <mat-form-field class="col-12 col-sm-4 col-md-4 col-lg-4">
+                                        <mat-label>Método De Pago</mat-label>
+                                        <mat-select formControlName="second_payment_differ_payment_method">
+                                            <mat-option *ngFor="let option of payment_options" [value]="option.value" [disabled]="this.sale.controls.first_payment_differ_payment_method.value == option.value">
+                                                {{option.description}}
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="sale.controls.second_payment_differ_payment_method.hasError('required') && sale.controls.second_payment_differ_payment_method.touched">El campo es requerido</mat-error>
+
+                                    </mat-form-field>
+
+                                    <mat-form-field class="col-12 col-sm-4 col-md-4 col-lg-4">
+                                        <mat-label>Restante</mat-label>
+                                        <input type="number" matInput formControlName="second_payment_differ_rest_to_pay" readonly="true">
+                                    </mat-form-field>
+
+                                    
+                                    <mat-form-field class="col-12 col-sm-4 col-md-4 col-lg-4">
+                                        <mat-label>Entregado</mat-label>
+                                        <input type="number" matInput formControlName="second_payment_differ_payment_delivered" (change)="calculateTotalDifferAmountDelivered()">
+                                        <mat-error *ngIf="sale.controls.second_payment_differ_payment_delivered.hasError('min') && sale.controls.second_payment_differ_payment_delivered.touched">El monto mínimo debe ser mayor o igual a {{sale.controls.second_payment_differ_rest_to_pay.value}}</mat-error>
+                                        <mat-error *ngIf="sale.controls.second_payment_differ_payment_delivered.hasError('max') && sale.controls.second_payment_differ_payment_delivered.touched">El monto no puede ser mayor a {{sale.controls.second_payment_differ_rest_to_pay.value}}</mat-error>
+
+                                    </mat-form-field>
+
+
+
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row d-flex">
+                            <mat-form-field appearance="fill" class="col-12 mt-4" >
+                                <mat-label>Nota</mat-label>
+                                <textarea type="text" readonly="true" matInput formControlName="note"></textarea>
+                            </mat-form-field>
+                        </div>
+
+
+                    </section>
+
+                    <section class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-content-center mt-4">
+                        <button mat-raised-button id="pay_button" [disabled]="sale.status  == 'INVALID' || delivered.status  == 'INVALID' "
+                            (click)="pay()">
+                            Pagar
+                            <mat-icon matIconSuffix class="text-success">check</mat-icon>
+                        </button>
+
+                    </section>
+
+                </div>
+            </form>
+        </section>
+
+    </section>
+
+
+
+</div>

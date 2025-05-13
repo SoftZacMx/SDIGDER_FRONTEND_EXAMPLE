@@ -1,0 +1,50 @@
+<h1 mat-dialog-title class="d-flex justify-content-center align-items-center mt-2 p-2">Compra De Mercancia</h1>
+<div mat-dialog-content>
+
+    <div class="row">
+
+        <!--GENERAL INFO SECTION-->
+        <section class="col-12">
+
+            <mat-list>
+                <div mat-subheader><b>Información General</b></div>
+                <mat-list-item>
+                  <div matListItemLine><b>Id De Compra:</b> {{merchandisePurchase.id}}</div>
+                  <div matListItemLine><b>Fecha:</b> {{merchandisePurchase.date}}</div>
+                  <div matListItemLine><b>Usuaio:</b> {{merchandisePurchase.user_name}}  {{merchandisePurchase.user_last_name}}  {{merchandisePurchase.user_second_last_name}}</div>
+                  <div matListItemLine><b>Subtotal:</b> {{merchandisePurchase.subtotal | currency}}  </div>
+                  <div matListItemLine><b>Iva:</b> {{merchandisePurchase.iva | currency}}  </div>
+                  <div matListItemLine><b>Total:</b> {{merchandisePurchase.total | currency}}  </div>
+                  <div matListItemLine><b>Método De Pago:</b> {{merchandisePurchase.payment_method }}  </div>
+
+                </mat-list-item>
+              </mat-list>
+
+        </section>
+
+        <mat-divider class="mt-2"></mat-divider>
+
+        <!--PRODUCTS INFO SECTION-->
+        <section class="col-12">
+          <div mat-subheader><b>Productos</b></div>
+            <mat-list>
+                <mat-list-item *ngFor="let product of merchandisePurchaseProducst" class="mt-4">
+                  <mat-icon matListItemIcon>lunch_dining</mat-icon>
+                  <div matListItemTitle>{{product.name}}</div>
+                  <div matListItemLine><b>Cantidad:</b> {{product.amount}}  </div>
+                  <div matListItemLine><b>Unidad De Medida:</b> {{product.unit_of_measurement}}  </div>
+                  <div matListItemLine><b>Subtotal:</b> {{product.subtotal | currency}}  </div>
+                  <div matListItemLine><b>Total:</b> {{product.total | currency}}  </div>
+                </mat-list-item>
+              </mat-list>
+        </section>
+
+    </div>
+
+</div>
+<div mat-dialog-actions class="row d-flex justify-content-center p-4">
+    <div class="col-12 col-sm-6 col-md-6">
+        <button mat-raised-button (click)="close()" class="actionButtons w-100" color="primary">Cerrar</button>
+    </div>
+
+</div>

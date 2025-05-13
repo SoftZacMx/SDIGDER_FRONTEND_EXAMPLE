@@ -1,0 +1,17 @@
+<div class="main">
+    <!-- Card Contenedor -->
+    <div class="w-full max-w-sm p-4 bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
+        <!-- Contenido de la tarjeta -->
+        <div class="flex flex-col justify-between space-y-4">
+            <!-- Nombre del platillo -->
+            <p class="title text-2xl font-semibold text-gray-800">{{saource.name}}</p>
+
+            <!-- Precio del platillo -->
+            <p class="subtitle text-lg font-medium text-cyan-600">{{saource.price | currency}} MXN</p>
+
+            <!-- Categoría del platillo -->
+            <p class="subtitle text-sm text-gray-600">{{saource.category_name}}</p>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,50 @@
+<h1 mat-dialog-title class="d-flex justify-content-center align-items-center mt-2 p-2">Editar Pago</h1>
+<div mat-dialog-content>
+
+    <mat-form-field class="col-12 mt-2 p-2">
+        <mat-label>Usuario</mat-label>
+        <input type="text" name="" id="" readonly [(ngModel)]="user" matInput>
+        <button mat-icon-button matIconSuffix matTooltip="Seleccionar usuario" (click)="openDialogSelectUser('500','500')">
+            <mat-icon>people</mat-icon>
+        </button>
+        <button mat-icon-button matIconSuffix matTooltip="Limpiar" (click)="clean()">
+            <mat-icon>delete</mat-icon>
+        </button>
+    </mat-form-field>
+
+    <form [formGroup]="payment" class="row">
+
+        <mat-form-field class="col-12">
+            <mat-label>Cantidad</mat-label>
+            <input type="number" matInput formControlName="amount">
+            <mat-icon matIconSuffix>attach_money</mat-icon>
+            <mat-error *ngIf="payment.controls.amount.hasError('required') && payment.controls.amount.touched ">El campo
+                es requerido</mat-error>
+            <mat-error *ngIf="payment.controls.amount.hasError('min') && payment.controls.amount.touched">El monto debe
+                ser mayor que 0</mat-error>
+        </mat-form-field>
+        <mat-form-field class="col-12">
+            <mat-label>Método De Pago</mat-label>
+            <mat-select formControlName="payment_method">
+                <mat-option *ngFor="let option of payment_methods" [value]="option.value">
+                    {{option.description}}
+                </mat-option>
+            </mat-select>
+            <mat-error
+                *ngIf="payment.controls.payment_method.hasError('required') && payment.controls.payment_method.touched ">El
+                campo es requerido</mat-error>
+        </mat-form-field>
+    </form>
+
+
+</div>
+<div mat-dialog-actions class="row d-flex justify-content-between p-4">
+    <div class="col-4 d-flex justify-content-center">
+        <button mat-raised-button (click)="close()" class="actionButtons" color="primary">Cancelar</button>
+    </div>
+    <div class="col-4 d-flex justify-content-center">
+        <button mat-raised-button (click)="pay()" class="actionButtons" color="primary"
+            [disabled]="payment.status == 'INVALID'  ">Pagar</button>
+    </div>
+
+</div>

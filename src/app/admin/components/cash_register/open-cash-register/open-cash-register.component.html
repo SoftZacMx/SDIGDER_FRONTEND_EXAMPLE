@@ -1,0 +1,31 @@
+<div class="row d-flex justify-content-center mt-2 p-2">
+    <div class="col-12 d-flex justify-content-center">
+        <h2>Apertura De Caja</h2>
+    </div>
+    <div class="row d-flex justify-content-center ">
+
+        <mat-form-field class="col-12 col-sm-8 col-md-8">
+            <mat-label>Caja</mat-label>
+            <input type="text" name="" id="" readonly [(ngModel)]="cash_register" matInput>
+            <mat-icon matIconSuffix matTooltip="Seleccionar una caja"
+                (click)="openDialogSelectCashRegister('500','500')">point_of_sale</mat-icon>
+            <mat-icon matIconSuffix matTooltip="Limpiar" (click)="clean('cash_register')">delete</mat-icon>
+        </mat-form-field>
+        <form [formGroup]="opening_cash" class="col-12 col-sm-8 col-md-8">
+            <mat-form-field class="col-12">
+                <mat-label>Efectivo en caja</mat-label>
+                <input type="text" formControlName="cash" matInput>
+                <mat-icon matIconSuffix>attach_money</mat-icon>
+            </mat-form-field>
+        </form>
+
+        <div class="col-12 col-sm-8 col-md-8">
+            <button mat-raised-button color="primary" class="w-100" [disabled]="opening_cash.status == 'INVALID'" (click)="openCashRegister()">
+                Aperturar Caja
+            </button>
+        </div>
+    </div>
+
+
+
+</div>

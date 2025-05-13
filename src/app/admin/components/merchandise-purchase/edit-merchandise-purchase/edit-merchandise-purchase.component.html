@@ -1,0 +1,60 @@
+
+<h1 mat-dialog-title class="d-flex justify-content-center align-items-center mt-2 p-2">Editar Compra De Mercancia</h1>
+<div mat-dialog-content>
+
+    <form [formGroup]="purchase_merchandice" class="row">
+        <mat-form-field class="col-12 mt-2 p-2">
+            <mat-label>Descripción</mat-label>
+            <textarea type="text" rows="5" matInput formControlName="description"></textarea>
+            <mat-error *ngIf="purchase_merchandice.controls.description.hasError('pattern')">Solo caracteres alfanuméricos</mat-error>
+            <mat-hint>{{purchase_merchandice.controls.description.value?.length}} / 500</mat-hint>
+        </mat-form-field>
+        <mat-form-field class="col-12">
+            <mat-label>Subtotal</mat-label>
+            <input type="number" matInput formControlName="subtotal">
+            <mat-icon matIconSuffix>attach_money</mat-icon>
+            <mat-error *ngIf="purchase_merchandice.controls.subtotal.hasError('required')">El campo es requerido</mat-error>
+            <mat-error *ngIf="purchase_merchandice.controls.subtotal.hasError('min')">El total debe ser mayor que 0</mat-error>
+        </mat-form-field>
+        <mat-form-field class="col-12 mt-2 p-2">
+            <mat-label>Iva</mat-label>
+            <input type="number" matInput formControlName="iva" (ngModelChange)="setTotal()" maxlength="2">
+            <mat-icon matIconSuffix>attach_money</mat-icon>
+            <mat-error *ngIf="purchase_merchandice.controls.iva.hasError('required')">El campo es requerido</mat-error>
+            <mat-error *ngIf="purchase_merchandice.controls.iva.hasError('min')">El total debe ser mayor que 0</mat-error>
+            <mat-error *ngIf="purchase_merchandice.controls.iva.hasError('pattern')">El iva debe estar indicado en un numero entero positivo</mat-error>
+
+        </mat-form-field>
+        <mat-form-field class="col-12">
+            <mat-label>Total</mat-label>
+            <input type="number" matInput formControlName="total" readonly>
+            <mat-icon matIconSuffix>attach_money</mat-icon>
+            <mat-error *ngIf="purchase_merchandice.controls.total.hasError('required')">El campo es requerido</mat-error>
+            <mat-error *ngIf="purchase_merchandice.controls.total.hasError('min')">El total debe ser mayor que 0</mat-error>
+
+        </mat-form-field>
+        <mat-form-field class="col-12">
+            <mat-label>Método De Pago</mat-label>
+            <mat-select formControlName="payment_method">
+                <mat-option *ngFor="let payment_method of payment_methods" [value]="payment_method.value">
+                    {{payment_method.description}}
+                </mat-option>
+            </mat-select>
+            <mat-error *ngIf="purchase_merchandice.controls.description.hasError('required')">El campo es requerido</mat-error>
+            <mat-error *ngIf="purchase_merchandice.controls.description.hasError('pattern')">Solo caracteres alfanuméricos</mat-error>
+        </mat-form-field>
+
+    </form>
+
+
+
+</div>
+<div mat-dialog-actions class="row d-flex justify-content-between p-4">
+  <div class="col-4 d-flex justify-content-center">
+    <button mat-raised-button (click)="close()" class="actionButtons" color="primary">Cancelar</button>
+  </div>
+  <div class="col-4 d-flex justify-content-center">
+    <button mat-raised-button (click)="update()" class="actionButtons" color="primary" [disabled]="purchase_merchandice.status == 'INVALID'">Registrar</button>
+  </div>
+
+</div>

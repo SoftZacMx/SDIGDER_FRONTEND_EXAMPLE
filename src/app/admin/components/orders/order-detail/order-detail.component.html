@@ -1,0 +1,140 @@
+<div mat-dialog-content>
+
+  <!--ORDER DETAIL-->
+  <section class="row">
+
+    <!--GENERAL ORDER INFO-->
+    <mat-list class="col-12">
+      <mat-list-item lines="7">
+        <span matListItemTitle class="mt-2 mb-2">
+          <b>Información General</b>
+        </span>
+        <div class="row w-100">
+
+          <div class="col-6">
+            <span matListItemLine>
+              <b>Id Orden:</b> {{order.id}}
+            </span>
+            <span matListItemLine>
+              <b>Id Caja:</b> {{order.cash_register_id}}
+            </span>
+            <span matListItemLine>
+              <b>Id Apertura De Caja:</b> {{order.opening_cash_register_id}}
+            </span>
+            <span matListItemLine>
+              <b>Origen:</b> {{order.origin == 'Local' ? 'Local':'Pedido'}}
+            </span>
+            <span matListItemLine>
+              <b>Fecha:</b> {{order.date}}
+            </span>
+
+          </div>
+
+          <div class="col-6">
+
+
+
+            <span matListItemLine>
+              <b>Usuario:</b> {{order.name}} {{order.last_name}} {{order.second_last_name}}
+            </span>
+
+            <span matListItemLine>
+              <b>Cliente:</b> {{order.client == '' ? 'Sin nombre' : order.client}}
+            </span>
+            <span matListItemLine>
+              <b>Estatus de entrega:</b> {{order.delivered == true ? 'Entregado':'Pendiente'}}
+            </span>
+            <span matListItemLine>
+              <b>Estatus de pago:</b> {{order.status == true ? 'Pagada':'Pendiente'}}
+            </span>
+          </div>
+
+          <mat-divider class="mt-2"></mat-divider>
+
+          <div class="col-12 mt-2">
+            <div class="row d-flex justify-content-between">
+              <div class="col-12 col-sm-4 col-md-4">
+                <span matListItemLine>
+                  <b>Sutotal:</b> {{order.subtotal | currency}}
+                </span>
+              </div>
+              <div class="col-12 col-sm-4 col-md-4">
+                <span matListItemLine>
+                  <b>Propina:</b> {{order.tip | currency}}
+                </span>
+              </div>
+              <div class="col-12 col-sm-4 col-md-4">
+                <span matListItemLine>
+                  <b>Total:</b> {{order.total | currency}}
+                </span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+
+      </mat-list-item>
+    </mat-list>
+  </section>
+
+  <!--PRODUCTS LIST-->
+  <mat-divider class="mt-2"></mat-divider>
+  <section class="row" style="max-height: 250px; overflow: auto;">
+    <mat-list class="col-12">
+      <span matListItemTitle class="mt-2 mb-2">
+        <b>Productos</b>
+      </span>
+      <mat-list-item *ngFor="let saource of saources">
+        <mat-icon matListItemIcon>lunch_dining</mat-icon>
+        <div matListItemTitle>
+          {{saource.name}}
+        </div>
+        <div matListItemLine>
+          Precio: {{saource.unite_price | currency}}
+        </div>
+        <div matListItemLine>
+          Cantidad: {{saource.amount}}
+        </div>
+      </mat-list-item>
+    </mat-list>
+  </section>
+
+  <!--PAYMENTS DIFFERNETIATION-->
+  <mat-divider class="mt-2"></mat-divider>
+  <section class="row" style="max-height: 250px; overflow: auto;" *ngIf="payments_differntiations.length > 0 ">
+
+    <!--DEFFER PAYMENTS-->
+    <mat-list class="col-12">
+      <span matListItemTitle class="mt-2 mb-2">
+        <b>Pagos Diferidos</b>
+      </span>
+      <mat-list-item lines="4" *ngFor="let payment of payments_differntiations">
+        <mat-icon matListItemIcon>payments</mat-icon>
+        <div matListItemLine>
+          <b>Cantidad Primer Forma De Pago:</b> {{payment.first_payment_amount | currency}}
+        </div>
+        <div matListItemLine>
+          <b>Método De Pago Primer Forma De Pago:</b> {{payment.first_payment_payment_method}}
+        </div>
+        <div matListItemLine>
+          <b>Cantidad Segunda Forma De Pago:</b> {{payment.second_payment_payment_method}}
+        </div>
+        <div matListItemLine>
+          <b>Método De Pago Segunda Forma De Pago:</b> {{payment.second_payment_amount | currency}}
+        </div>
+      </mat-list-item>
+    </mat-list>
+
+  </section>
+
+</div>
+
+
+<div mat-dialog-actions class="row d-flex justify-content-center p-4">
+  <div class="col-6 d-flex justify-content-center">
+    <button mat-raised-button (click)="close()" class="w-100" color="primary">Cerrar</button>
+  </div>
+
+
+</div>

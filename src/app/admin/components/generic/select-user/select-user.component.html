@@ -1,0 +1,63 @@
+<h1 mat-dialog-title class="d-flex justify-content-center align-items-center mt-2 p-2">Usuarios</h1>
+<div mat-dialog-content>
+
+    <!--FILTERS SECTION-->
+    <section class="row w-100 d-flex justify-content-between p-2 mt-2">
+
+        <!--FILTERS-->
+        <div class="col-12 col-md-10 d-flex justify-content-center align-items-center">
+
+            <div class="row w-100 d-flex justify-content-between">
+
+                <mat-form-field class="col-12">
+                    <mat-label>Status</mat-label>
+                    <mat-select [(ngModel)]="filters.status">
+                        <mat-option *ngFor="let option of status_options" [value]="option.value">
+                            {{option.description}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+            </div>
+
+        </div>
+
+        <!--SEARCH BUTTON-->
+        <div class="col-12 col-md-2 d-flex justify-content-center align-items-center">
+            <button mat-fab color="primary" (click)="search()">
+                <mat-icon matTooltip="Buscar">search</mat-icon>
+            </button>
+        </div>
+
+    </section>
+
+    <!--PAGINATOR-->
+    <section class="col-12 mt-2 p-2">
+        <mat-paginator [length]="length" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
+            aria-label="Select page" (page)="handlePageEvent($event)">
+        </mat-paginator>
+
+    </section>
+
+    <!--FILTER USER PIPE-->
+    <section class="row w-100 mt-2 p-2">
+        <div class="col-12">
+            <mat-form-field class="w-100">
+                <mat-label>Nombre</mat-label>
+                <input type="text" matInput [(ngModel)]="user_name">
+            </mat-form-field>
+        </div>
+    </section>
+
+    <mat-selection-list #usersList [multiple]="false" (selectionChange)="saveUserSelected(usersList)">
+        <mat-list-option *ngFor="let user of users | usersPipe:user_name" [value]="user">{{user.name}} {{user.last_name}}
+            {{user.second_last_name}}</mat-list-option>
+    </mat-selection-list>
+</div>
+<div mat-dialog-actions class="row d-flex justify-content-center p-4">
+    <div class="col-6 d-flex justify-content-center">
+        <button mat-raised-button (click)="close()" class="w-100" color="primary">Cerrar</button>
+    </div>
+
+
+</div>

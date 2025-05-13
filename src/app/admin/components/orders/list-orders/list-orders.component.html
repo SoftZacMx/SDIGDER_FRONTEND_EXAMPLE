@@ -1,0 +1,183 @@
+<div class="row d-flex justify-content-center">
+
+    <section class="row mt-2 p-2">
+        <h2 class="d-flex justify-content-center align-items-center">Ordenes</h2>
+    </section>
+
+    <!--FILTERS SECTION-->
+    <div class="row mt-2 p-2">
+
+        <!--FILTERS-->
+        <div class="col-12 col-md-10">
+            <div class="row d-flex justify-content-between">
+                <mat-form-field class="col-12 col-sm-6 col-md-6 mt-2 p-2" >
+                    <mat-label>Estatus De Pago</mat-label>
+                    <mat-select [(ngModel)]="filters.status">
+                        <mat-option *ngFor="let status of status_options" [value]="status.value">
+                            {{status.description}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field class="col-12 col-sm-6 col-md-6 mt-2 p-2" >
+                    <mat-label>Origen</mat-label>
+                    <mat-select [(ngModel)]="filters.origin">
+                        <mat-option *ngFor="let origin of origin_options" [value]="origin.value">
+                            {{origin.description}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field class="col-12 col-sm-6 col-md-6 mt-2 p-2">
+                    <mat-label>Usuario</mat-label>
+                    <input type="text" name="" id="" readonly [(ngModel)]="user" matInput>
+                    <button mat-icon-button matIconSuffix matTooltip="Seleccionar usuario" (click)="openDialogSelectUser('500','500')">
+                        <mat-icon>people</mat-icon>
+                    </button>
+                    <button mat-icon-button matIconSuffix matTooltip="Limpiar" (click)="clean('user')">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </mat-form-field>
+                <mat-form-field class="col-12 col-sm-6 col-md-6 mt-2 p-2">
+                    <mat-label>Desde</mat-label>
+                    <input matInput [matDatepicker]="picker" [(ngModel)]="filters.start_date">
+                    <mat-hint>MM/DD/AAAA</mat-hint>
+                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                    <button mat-icon-button matIconSuffix matTooltip="Limpiar" (click)="clean('start_date')">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                    <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+                <mat-form-field class="col-12 col-sm-6 col-md-6 mt-2 p-2">
+                    <mat-label>Hasta</mat-label>
+                    <input matInput [matDatepicker]="picker1" [(ngModel)]="filters.end_date">
+                    <mat-hint>MM/DD/AAAA</mat-hint>
+                    <mat-datepicker-toggle matIconSuffix [for]="picker1"></mat-datepicker-toggle>
+                    <button mat-icon-button matIconSuffix matTooltip="Limpiar" (click)="clean('end_date')">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                    <mat-datepicker #picker1></mat-datepicker>
+                </mat-form-field>
+                <mat-form-field class="col-12 col-sm-6 col-md-6 mt-2 p-2">
+                    <mat-label>Estatus De Entrega</mat-label>
+                    <mat-select [(ngModel)]="filters.delivered">
+                        <mat-option *ngFor="let status of deliver_status_options" [value]="status.value">
+                            {{status.description}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <!--
+                <mat-form-field class="col-12 col-md-6">
+                    <mat-label>Caja</mat-label>
+                    <input type="text" name="" id="" readonly [(ngModel)]="cash_register" matInput>
+                    <button matIconSuffix mat-icon-button matTooltip="Seleccionar caja" (click)="openDialogSelectCashRegister('500','500')">
+                        <mat-icon>local_convenience_store</mat-icon>
+                    </button>
+                    <button matIconSuffix mat-icon-button matTooltip="Limpiar" (click)="clean('cash_register')">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </mat-form-field>
+                -->
+            </div>
+
+        </div>
+        
+        <!--SEARCH BUTTON-->
+        <div class="col-12 col-md-2 d-flex justify-content-center align-items-center ">
+            <button mat-fab matTooltip="Buscar" color="primary" (click)="search()">
+                <mat-icon>search</mat-icon>
+            </button>
+        </div>
+        
+    </div>  
+
+    <!--PAGINATOR-->
+    <div class="row mt-2 p-2">
+        <mat-paginator #paginator class="demo-paginator" (page)="handlePageEvent($event)" [length]="length"
+            [pageSize]="pageSize" [disabled]="false" [showFirstLastButtons]="showFirstLastButtons"
+            [pageSizeOptions]="showPageSizeOptions ? pageSizeOptions : []" [hidePageSize]="hidePageSize"
+            [pageIndex]="pageIndex" aria-label="Select page">
+        </mat-paginator>
+    </div>
+
+    <!--PIPE FILTER SAOURCES
+    <div class="row mt-2 p-2">
+        <mat-form-field class="col-12 col-md-6">
+            <mat-label></mat-label>
+            <input type="text" [(ngModel)]="saource_name" matInput>
+        </mat-form-field>
+    </div>
+    -->
+
+    <!--ORDERS DATA TABLE-->
+    <div class="row mt-2 p-2 w-100">
+        <div class="table-responsive" *ngIf="orders.length > 0; else ordersNotFoundTemplate" >
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Origen</th>
+                        <th>Cliente</th>
+                        <th>Usuario</th>
+                        <th>Fecha</th>
+                        <th>Mesa</th>
+                        <th>Pago</th>
+                        <th>Entrega</th>
+                        <th>Total</th>
+                        <th>Acciones</th>
+
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let order of orders | saourcesPipe:saource_name;index as i">
+                        <td>{{order.id}}</td>
+                        <td>{{order.origin}}</td>
+                        <td>{{order.client == '' ? 'Sin nombre' : order.client}}</td>
+                        <td> {{order.name}} {{order.last_name}} {{order.second_last_name}} </td>
+                        <td>{{order.date}}</td>
+                        <td>{{order.number_table == 0 ? 'Sin mesa' : order.number_table }}</td>
+                        <td>{{order.status == true ? 'Pagada':'Pendiente'}}</td>
+                        <td>{{order.delivered == true ? 'Entregada':'Pendiente'}}</td>
+                        <td>{{order.total | currency}}</td>
+                        <td class="d-flex justify-content-center align-items-center flex-wrap flex-md-nowrap overflow-auto gap-2">
+                            <button mat-mini-fab matTooltip="Abrir en punto de venta" color="primary" (click)="editOrder(order.id)" [disabled]="order.status == true">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                        
+                            <button mat-mini-fab matTooltip="Información De La Orden" color="primary" (click)="openDialogViewOrderDetail('500','500',order)">
+                                <mat-icon>info</mat-icon>
+                            </button>
+                        
+                            <button mat-mini-fab matTooltip="Pagar" color="primary" (click)="payOrder(order.id)" [disabled]="order.status == true">
+                                <mat-icon>attach_money</mat-icon>
+                            </button>
+                        
+                            <button mat-mini-fab matTooltip="Eliminar" color="primary" (click)="deleteOrder(order.id)" *ngIf="rol == 'Administrator'">
+                                <mat-icon>delete</mat-icon>
+                            </button>
+                        
+                            <button mat-mini-fab matTooltip="Entregar" color="primary" (click)="deliver(order.id)" [disabled]="(order.delivered == true || order.origin == 'Local' || order.status == 0)">
+                                <mat-icon>verified</mat-icon>
+                            </button>
+                        
+                            <button mat-mini-fab matTooltip="Reimprimir ticket para cocina" color="primary" (click)="printTicket(order.id)">
+                                <mat-icon>kitchen</mat-icon>
+                            </button>
+                        
+                            <button mat-mini-fab matTooltip="Reimprimir ticket de venta" color="primary" (click)="generateSaleTickete(order.id)">
+                                <mat-icon>print</mat-icon>
+                            </button>
+                        </td>   
+                        <!--changes-->
+                        
+                         
+                    </tr>  
+                </tbody>
+            </table>
+        </div>
+        <ng-template  #ordersNotFoundTemplate>
+            <div class="col-12 d-flex justify-content-center">
+                <h2>No existen resultados de busqueda</h2>
+            </div>
+        </ng-template>
+    </div>
+</div>

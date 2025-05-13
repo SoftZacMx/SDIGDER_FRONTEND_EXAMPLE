@@ -1,0 +1,136 @@
+<div class="row d-flex justify-content-center ">
+
+    <!--TITLE-->
+    <section class="row mt-2 p-2">
+        <h2 class=" d-flex justify-content-center align-items-center">Mesas</h2>
+    </section>
+
+    <!--CREATE SAOURCE BUTTON-->
+    <div class="row mt-2 p-2 d-flex justify-content-center">
+        <div class="col-12 col-md-5">
+            <button mat-raised-button color="primary" class="w-100" (click)="openCreateTable('500','500')">
+                Nueva Mesa
+            </button>
+
+
+        </div>
+    </div>
+
+    <!--FILTERS SECTION-->
+    <div class="row mt-2 p-2">
+
+        <!--FILTERS-->
+        <div class="col-12 col-md-10">
+            <div class="row d-flex justify-content-between">
+                <mat-form-field class="col-12 col-md-6">
+                    <mat-label>Estatus</mat-label>
+                    <mat-select [(ngModel)]="filters.status">
+                        <mat-option *ngFor="let status of status_options" [value]="status.value">
+                            {{status.description}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field class="col-12 col-sm-6 col-md-6 mt-2 p-2">
+                    <mat-label>Creada Por</mat-label>
+                    <input type="text" name="" id="" readonly [(ngModel)]="user" matInput>
+                    <button mat-icon-button matIconSuffix matTooltip="Seleccionar usuario"
+                        (click)="openDialogSelectUser('500','500')">
+                        <mat-icon>people</mat-icon>
+                    </button>
+                    <button mat-icon-button matIconSuffix matTooltip="Limpiar" (click)="clean('user')">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </mat-form-field>
+                <mat-form-field class="col-12 col-sm-6 col-md-6 mt-2 p-2">
+                    <mat-label>Desde</mat-label>
+                    <input matInput [matDatepicker]="picker" [(ngModel)]="filters.start_date">
+                    <mat-hint>MM/DD/AAAA</mat-hint>
+                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                    <button mat-icon-button matIconSuffix matTooltip="Limpiar" (click)="clean('start_date')">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                    <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+                <mat-form-field class="col-12 col-sm-6 col-md-6 mt-2 p-2">
+                    <mat-label>Hasta</mat-label>
+                    <input matInput [matDatepicker]="picker1" [(ngModel)]="filters.end_date">
+                    <mat-hint>MM/DD/AAAA</mat-hint>
+                    <mat-datepicker-toggle matIconSuffix [for]="picker1"></mat-datepicker-toggle>
+                    <button mat-icon-button matIconSuffix matTooltip="Limpiar" (click)="clean('end_date')">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                    <mat-datepicker #picker1></mat-datepicker>
+                </mat-form-field>
+
+            </div>
+
+        </div>
+
+        <!--SEARCH BUTTON-->
+        <div class="col-12 col-md-2 d-flex justify-content-center">
+            <button mat-fab matTooltip="Buscar" color="primary" (click)="search()">
+                <mat-icon>search</mat-icon>
+            </button>
+        </div>
+
+    </div>
+
+
+    <!--PAGINATOR-->
+    <div class="row mt-2 p-2">
+        <mat-paginator #paginator class="demo-paginator" (page)="handlePageEvent($event)" [length]="length"
+            [pageSize]="pageSize" [disabled]="false" [showFirstLastButtons]="showFirstLastButtons"
+            [pageSizeOptions]="showPageSizeOptions ? pageSizeOptions : []" [hidePageSize]="hidePageSize"
+            [pageIndex]="pageIndex" aria-label="Select page">
+        </mat-paginator>
+    </div>
+
+    <!--TABLES DATA TABLE-->
+    <div class="row mt-2 p-2 w-100">
+        <div class="table-responsive" *ngIf="tables.length > 0; else tablesNotFound">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Número De Mesa</th>
+                        <th>Usuario</th>
+                        <th>Fecha Creación</th>
+                        <th>Estatus</th>
+                        <th>Editar</th>
+                        <th>Eliminar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let table of tables;index as i">
+                        <td>{{table.id}}</td>
+                        <td>{{table.number_table}}</td>
+                        <td> {{table.user_name}} {{table.user_last_name}} {{table.user_second_last_name}} </td>
+                        <td>{{table.creation_date}}</td>
+                        <td>{{table.status == true ? 'Activa':'Inactiva'}}</td>
+                        <td>
+                            <button mat-mini-fab matTooltip="Editar" color="primary" (click)="openEditTable('500','500',table)">
+                                <mat-icon>
+                                    edit
+                                </mat-icon>
+                            </button>
+                        </td>
+                        <td>
+                            <button mat-mini-fab matTooltip="Elimnar" color="primary" (click)="deleteTable(table.id)">
+                                <mat-icon>
+                                    delete
+                                </mat-icon>
+                            </button>
+                        </td>
+
+
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <ng-template #tablesNotFound>
+            <div class="col-12 d-flex justify-content-center">
+                <h2>No existen resultados de busqueda</h2>
+            </div>
+        </ng-template>
+    </div>
+</div>

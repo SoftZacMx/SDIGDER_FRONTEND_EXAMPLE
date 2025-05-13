@@ -1,0 +1,141 @@
+<section class="row">
+
+    <!--TITLE-->
+    <section class="row mt-2 p-2">
+        <h2 class="d-flex justify-content-center">Compra De Mercancias</h2>
+    </section>
+
+    <!--CREATE PURCHASE MERCHANDISE-->
+    <section class="row mt-2 p-2 d-flex justify-content-center">
+        <button mat-raised-button class="col-12 col-sm-6 col-md-6" color="primary" (click)="openDialogCreatePurchaseMerchandise('500','500')">
+            Nueva Compra
+        </button>
+    </section>
+
+
+    <!--FILTERS-->
+    <section class="row d-flex jsutify-content-between mt-2 p-2">
+        <div class="col-12 col-sm-10 col-md-10">
+            <div class="row d-flex justify-content-sm-center justify-content-md-between">
+                <mat-form-field class="col-12 col-sm-10 col-md-6">
+                    <mat-label>Desde</mat-label>
+                    <input matInput [matDatepicker]="picker" [(ngModel)]="filters.start_date">
+                    <mat-hint>MM/DD/YYYY</mat-hint>
+                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                    <button mat-icon-button matIconSuffix (click)="clean('start_date')">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </mat-form-field>
+                <mat-form-field class="col-12 col-sm-10 col-md-6">
+                    <mat-label>Hasta</mat-label>
+                    <input matInput [matDatepicker]="picker1" [(ngModel)]="filters.end_date">
+                    <mat-hint>MM/DD/YYYY</mat-hint>
+                    <mat-datepicker-toggle matIconSuffix [for]="picker1"></mat-datepicker-toggle>
+                    <mat-datepicker #picker1></mat-datepicker>
+                    <button mat-icon-button matIconSuffix (click)="clean('end_date')">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </mat-form-field>
+                <mat-form-field class="col-12 col-sm-10 col-md-6">
+                    <mat-label>Usuario</mat-label>
+                    <input type="text" name="" id="" readonly [(ngModel)]="user" matInput>
+                    <button mat-icon-button matIconSuffix matTooltip="Seleccionar usuario"
+                        (click)="openDialogSelectUser('500','500')">
+                        <mat-icon>people</mat-icon>
+                    </button>
+                    <button mat-icon-button matIconSuffix matTooltip="Limpiar" (click)="clean('user')">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </mat-form-field>
+            </div>
+        </div>
+        <!--SEARCH BUTTON-->
+        <div class="col-12 col-md-2 d-flex justify-content-center align-items-center ">
+            <button mat-fab matTooltip="Buscar" color="primary" (click)="search()">
+                <mat-icon>search</mat-icon>
+            </button>
+        </div>
+
+    </section>
+
+    <!--PAGINATOR-->
+    <div class="row mt-2 p-2">
+        <mat-paginator #paginator class="demo-paginator" (page)="handlePageEvent($event)" [length]="length"
+            [pageSize]="pageSize" [disabled]="false" [showFirstLastButtons]="showFirstLastButtons"
+            [pageSizeOptions]="showPageSizeOptions ? pageSizeOptions : []" [hidePageSize]="hidePageSize"
+            [pageIndex]="pageIndex" aria-label="Select page">
+        </mat-paginator>
+    </div>
+
+    <!--PIPE FILTER SAOURCES
+    <div class="row mt-2 p-2">
+        <mat-form-field class="col-12 col-md-6">
+            <mat-label></mat-label>
+            <input type="text" [(ngModel)]="saource_name" matInput>
+        </mat-form-field>
+    </div>
+    -->
+   
+    <!--MERCHANDISES PURCHASE DATA TABLE-->
+    <div class="row mt-2 p-2 w-100">
+        <div class="table-responsive" *ngIf="merchandises_purchase.length > 0; else merchandisePurchaseNotFoundTemplate">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Usuario</th>
+                        <th>Fecha</th>
+                        <th>Subtotal</th>
+                        <th>Iva</th>
+                        <th>Total</th>
+                        <th>Descripción</th>
+                        <th>Detalle</th>
+                        <th>Editar</th>
+                        <th *ngIf="rol == 'Administrator' ">Eliminar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let purchase of merchandises_purchase;index as i">
+                        <td>{{purchase.id}}</td>
+                        <td> {{purchase.user_name}} {{purchase.user_last_name}} {{purchase.user_second_last_name}} </td>
+                        <td>{{purchase.date}}</td>
+                        <td>{{purchase.subtotal | currency}}</td>
+                        <td>{{purchase.iva | currency}}</td>
+                        <td>{{purchase.total | currency}}</td>
+                        <td>{{purchase.description}}</td>
+                        <td>
+                            <button mat-mini-fab matTooltip="Detalle de la compra" color="primary" (click)="openDialogViewPurchaseMerchandiseDetail('500','500',purchase)">
+                                <mat-icon>
+                                    info
+                                </mat-icon>
+                            </button>
+                        </td>
+                        <td>
+                            <button mat-mini-fab matTooltip="Editar" color="primary" (click)="openDialogEditPurchaseMerchandise('500','500',purchase)">
+                                <mat-icon>
+                                    edit
+                                </mat-icon>
+                            </button>
+                        </td>
+                        <td>
+                            <button mat-mini-fab matTooltip="Eliminar" color="primary"
+                                (click)="deletePurchaseMerchandise(purchase.id!)" *ngIf="rol == 'Administrator' ">
+                                <mat-icon>
+                                    delete
+                                </mat-icon>
+                            </button>
+                        </td>
+
+
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <ng-template #merchandisePurchaseNotFoundTemplate>
+            <div class="col-12 d-flex justify-content-center">
+                <h2>No existen resultados de busqueda</h2>
+            </div>
+        </ng-template>
+    </div>
+</section>

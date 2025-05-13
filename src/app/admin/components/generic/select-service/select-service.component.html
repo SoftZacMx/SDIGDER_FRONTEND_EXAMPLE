@@ -1,0 +1,101 @@
+
+
+<h1 mat-dialog-title class="d-flex justify-content-center align-items-center mt-2 p-2">Seleccione un servicio</h1>
+<div mat-dialog-content>
+    <div class="row">
+
+    
+        <!--FILTERS-->
+        <section class="row mt-2 p-2">
+            <section class="col-12 col-sm-10 col-md-10">
+                <section class="row">
+                        <mat-form-field class="col-12 ">
+                            <mat-label>Desde</mat-label>
+                            <input matInput [matDatepicker]="picker" [(ngModel)]="filters.start_date">
+                            <button mat-icon-button matIconSuffix matTooltip="Limpiar" (click)="clean('start_date')">
+                                <mat-icon>delete</mat-icon>
+                            </button>
+                            <mat-hint>MM/DD/AAAA</mat-hint>
+                            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker></mat-datepicker>
+                          </mat-form-field>
+                        <mat-form-field class="col-12 ">
+                            <mat-label>Hasta</mat-label>
+                            <input matInput [matDatepicker]="picker1" [(ngModel)]="filters.end_date">
+                            <button mat-icon-button matIconSuffix matTooltip="Limpiar" (click)="clean('end_date')">
+                                <mat-icon>delete</mat-icon>
+                            </button>
+                            <mat-hint>MM/DD/AAAA</mat-hint>
+                            <mat-datepicker-toggle matIconSuffix [for]="picker1"></mat-datepicker-toggle>
+                            <mat-datepicker #picker1></mat-datepicker>
+                          </mat-form-field>
+                        <mat-form-field class="col-12 ">
+                            <mat-label>Estatus</mat-label>
+                            <mat-select [(ngModel)]="filters.status">
+                                <mat-option *ngFor="let status of status_options" [value]="status.value">
+                                    {{status.description}}
+                                </mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                        <mat-form-field class="col-12 ">
+                            <mat-label>Periodicidad</mat-label>
+                            <mat-select [(ngModel)]="filters.periodicity">
+                                <mat-option *ngFor="let periodicity of periodicity_options" [value]="periodicity.value">
+                                    {{periodicity.description}}
+                                </mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                </section>
+            </section>
+            <section class="col-12 col-sm-2 col-md-2 d-flex justify-content-center align-items-center">
+                <button mat-fab matTooltip="Buscar" color="primary" (click)="search()">
+                    <mat-icon>search</mat-icon>
+                </button>
+            </section>
+        </section>
+    
+        <!--PIPE SEARCH BUSSINES SERVICE-->
+        <div class="row">
+                <mat-form-field class="col-12 ">
+                    <mat-label>Servicio</mat-label>
+                    <input type="text" [(ngModel)]="service_name" matInput>
+                </mat-form-field>
+        </div>
+    
+           <!--PAGINATOR-->
+           <div class="row mt-2 p-2">
+            <mat-paginator #paginator class="demo-paginator" (page)="handlePageEvent($event)" [length]="length"
+                [pageSize]="pageSize" [disabled]="false" [showFirstLastButtons]="showFirstLastButtons"
+                [pageSizeOptions]="showPageSizeOptions ? pageSizeOptions : []" [hidePageSize]="hidePageSize"
+                [pageIndex]="pageIndex" aria-label="Select page">
+            </mat-paginator>
+        </div>
+    
+        <!--SAOURCES DATA TABLE-->
+        <div class="row mt-2 p-2 w-100">
+            <mat-selection-list #servicesList (selectionChange)="saveSelections(servicesList)" [multiple]="false">
+                <mat-list-option *ngFor="let service of services | bussinesServicesPipe:service_name ;index as i ;" [value]="service">
+                    <mat-list-item >
+                        <mat-icon matListItemIcon>settings</mat-icon>
+                        <div matListItemTitle>{{service.name}}</div>
+                        <div matListItemLine>{{service.periodicity}}</div>
+                        <div matListItemLine>{{service.registation_date}}</div>
+                        <div matListItemLine>{{service.status == true ? 'Activo' : 'Inactivo'}}</div>
+
+                      </mat-list-item>
+                </mat-list-option>
+
+            </mat-selection-list>
+        </div>
+    </div>
+
+</div>
+
+
+<div mat-dialog-actions class="row d-flex justify-content-center p-4">
+    <div class="col-6 d-flex justify-content-center">
+        <button mat-raised-button  class="w-100" color="primary" (click)="dialogRef.close()">Cerrar</button>
+    </div>
+
+
+</div>

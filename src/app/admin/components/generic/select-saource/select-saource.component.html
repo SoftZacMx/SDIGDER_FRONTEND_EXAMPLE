@@ -1,0 +1,78 @@
+
+
+<h1 mat-dialog-title class="d-flex justify-content-center align-items-center mt-2 p-2">Platillos</h1>
+<div mat-dialog-content>
+    <div class="row d-flex justify-content-center">
+
+
+    
+        <!--FILTERS SECTION-->
+        <div class="row mt-2 p-2">
+    
+            <!--FILTERS-->
+            <div class="col-12 col-md-10">
+                <div class="row d-flex justify-content-between">
+                    <mat-form-field class="col-12 col-md-6">
+                        <mat-label>Estatus</mat-label>
+                        <mat-select [(ngModel)]="filters.status">
+                            <mat-option *ngFor="let status of status_options" [value]="status.value">
+                                {{status.description}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+    
+            </div>
+            
+            <!--SEARCH BUTTON-->
+            <div class="col-12 col-md-2 d-flex justify-content-center">
+                <button mat-fab matTooltip="Buscar" color="primary" (click)="search()">
+                    <mat-icon>search</mat-icon>
+                </button>
+            </div>
+        </div>  
+    
+        <!--PAGINATOR-->
+        <div class="row mt-2 p-2">
+            <mat-paginator #paginator class="demo-paginator" (page)="handlePageEvent($event)" [length]="length"
+                [pageSize]="pageSize" [disabled]="false" [showFirstLastButtons]="showFirstLastButtons"
+                [pageSizeOptions]="showPageSizeOptions ? pageSizeOptions : []" [hidePageSize]="hidePageSize"
+                [pageIndex]="pageIndex" aria-label="Select page">
+            </mat-paginator>
+        </div>
+    
+        <!--PIPE FILTER SAOURCES-->
+        <div class="row mt-2 p-2">
+            <mat-form-field class="col-12 col-md-6">
+                <mat-label>Platillo</mat-label>
+                <input type="text" [(ngModel)]="saource_name" matInput>
+            </mat-form-field>
+        </div>
+    
+        <!--SAOURCES DATA TABLE-->
+        <div class="row mt-2 p-2 w-100">
+
+            <mat-selection-list #saourcesList [multiple]="false" (selectionChange)="saveSelections(saourcesList)">
+                <mat-list-option *ngFor="let saource of saources | saourcesPipe:saource_name ;index as i ;" [value]="saource">
+                    <mat-list-item >
+                        <mat-icon matListItemIcon>lunch_dining</mat-icon>
+                        <div matListItemTitle>{{saource.name}}</div>
+                        <div matListItemLine>{{saource.price | currency}}</div>
+                        <div matListItemLine>{{saource.status == true ? 'Activo' : 'Inactivo'}}</div>
+
+                      </mat-list-item>
+                </mat-list-option>
+
+            </mat-selection-list>
+        </div>
+    </div>
+</div>
+
+
+<div mat-dialog-actions class="row d-flex justify-content-center p-4">
+    <div class="col-6 d-flex justify-content-center">
+        <button mat-raised-button (click)="saveSelections(saourcesList)" class="w-100" color="primary">Cerrar</button>
+    </div>
+
+
+</div>

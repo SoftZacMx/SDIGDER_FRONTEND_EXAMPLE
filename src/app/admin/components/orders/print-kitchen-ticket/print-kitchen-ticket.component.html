@@ -1,0 +1,41 @@
+<h1 mat-dialog-title class="d-flex justify-content-center align-items-center mt-2 p-2">Ticket De Orden</h1>
+
+<div mat-dialog-content id="ticket-content">
+    <div class="row d-flex" style="max-width: fit-content;">
+
+        <div class="col-12 d-flex mt-2 p-2 d-flex justify-content-center">
+            <h1 class="d-flex justify-content-center align-items-center">Deliyunos</h1>
+        </div>
+        <hr>
+        <div class="col-12 d-flex flex-column align-items-center">
+            <p><b>Orden:</b> {{order.id}}</p>
+            <p><b>Origen:</b> {{order.origin == 'Local' ? 'Local':'Orden'}}</p>
+            <p *ngIf="order.origin != 'Order' "><b>Mesa:</b> {{order.assigned_table == '0' ? 'Sin mesa' :
+                order.assigned_table}}</p>
+
+        </div>
+        <hr>
+        <div class="col-12">
+            <h3 class="d-flex justify-content-center"><b>Platillos</b></h3>
+            <ul style="list-style: none; padding: 0px;">
+                <li *ngFor="let saource of order.saources" style="padding: 0px;">
+                    <i>
+                        <p> {{saource.name}} </p>
+                        <p> {{saource.amount}} </p>
+                        <p> {{saource.note || 'Sin nota'}}</p>
+                    </i>
+                    <hr>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div mat-dialog-actions class="row d-flex justify-content-between p-4">
+    <div class="col-12 col-sm-6 col-md-6 d-flex justify-content-center">
+        <button mat-raised-button (click)="print()" class="w-100" color="primary">Imprimir</button>
+    </div>
+    <div class="col-12 col-sm-6 col-md-6 d-flex justify-content-center">
+        <button mat-raised-button (click)="close()" class="w-100" color="primary">Cerrar</button>
+    </div>
+</div>

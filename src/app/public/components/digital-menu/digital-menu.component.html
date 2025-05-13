@@ -1,0 +1,48 @@
+<div class="row d-flex justify-content-center">
+    <div class="row mt-2 p-2">
+        <h2 class="d-flex justify-content-center align-items-center" style="font-size: 30px; font-weight: 600;">Menú Digital</h2>
+    </div>
+    <!--FILTETS-->
+    <div class="row d-flex justify-content-center:md mt-2 p-2 mb-2">
+        <div class="col-6 col-sm-6 col-md-2 col-lg-2 d-flex justify-content-center align-items-center mt-2" *ngFor="let cateogry of saources_categories">
+            <button class="w-100" color="primary" mat-fab extended matTooltip="Aplicar filtro"  (click)="applyFilters(cateogry.id)">
+                <mat-icon>fastfood</mat-icon>
+                {{cateogry.name}}
+            </button>
+        </div>
+        <div class="col-6 col-sm-6 col-md-3 col-lg-3 d-flex justify-content-center align-items-center mt-2" >
+            <button class="w-100" color="primary" mat-fab extended matTooltip="Limpiar los filtros aplicados"  (click)="applyFilters(0)">
+                <mat-icon>delete</mat-icon>
+                Limpiar filtros
+            </button>
+        </div>
+    </div>
+    <mat-divider class="mb-2 mt-2 mb-2"></mat-divider>
+    <!--PIPE-->
+    <div class="row mt-2 mb-2 p-4">
+        <mat-form-field class="col-12 col-sm-5 col-md-5">
+            <mat-label>Platillo</mat-label>
+            <input type="text" matInput [(ngModel)]="saource_name">
+        </mat-form-field>
+    </div>
+    <mat-divider class="mb-2 mt-2 mb-2"></mat-divider>
+    <!--CATEGORY NAME-->
+    <div class="row mt-4 mb-4">
+        <h2 style="font-size: x-large; font-weight: 450;" class="d-flex justify-content-center">{{filter_applyed || 'Todos los platillos'}}</h2>
+    </div>
+    <mat-divider class="mb-2 mt-2 mb-2"></mat-divider>
+    <!--SAOURCES SECTION-->
+    <div class="row mt-2" *ngIf="saources.length > 0; else noSaources">
+        <app-saource-card  *ngFor="let saource of saources | saourcesPipe:saource_name" [saource]="saource" class="col-12 col-sm-6 col-md-6 col-lg-6 mb-3"></app-saource-card>
+    </div>
+    <ng-template #noSaources>
+        <div class="row d-flex justify-content-center align-items-center">
+            <div class="col-12 d-flex justify-content-center align-items-center">
+                <img src="../../../../assets/images/cara-triste.png" alt="" srcset="">
+            </div>
+            <div class="col-12 col-sm-10 col-md-6 col-lg-6 mt-4">
+                <h2 class="d-flex justify-content-center align-items-center">No encontramos platillos con esa categoría</h2>
+            </div>
+        </div>
+    </ng-template>
+</div>

@@ -1,0 +1,136 @@
+
+<div class="row">
+
+    <!--TITLE-->
+    <div class="row mt-2 p-2 d-flex justify-content-center">
+        <div class="col-12 col-sm-6 col-md-6">
+            <h2 class="d-flex justify-content-center">Servicios</h2>
+        </div>
+    </div>
+    <!--CREATE SERVICE BUTTON-->
+    <section class="row d-flex justify-content-center align-items-center mt-2 p-2">
+        <div class="col-12 col-sm-6 col-md-6">
+            <button class="w-100" mat-raised-button matTooltip="Registrar nuevo servicio" color="primary" (click)="openDialogCreateService('500','500')">
+                Nuevo Servicio
+            </button>
+        </div>
+    </section>
+
+    <!--FILTERS-->
+    <section class="row mt-2 p-2">
+        <section class="col-12 col-sm-10 col-md-10">
+            <section class="row">
+                    <mat-form-field class="col-12 col-sm-6 col-md-6">
+                        <mat-label>Desde</mat-label>
+                        <input matInput [matDatepicker]="picker" [(ngModel)]="filters.start_date">
+                        <button mat-icon-button matIconSuffix matTooltip="Limpiar" (click)="clean('start_date')">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                        <mat-hint>MM/DD/AAAA</mat-hint>
+                        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                      </mat-form-field>
+                    <mat-form-field class="col-12 col-sm-6 col-md-6">
+                        <mat-label>Hasta</mat-label>
+                        <input matInput [matDatepicker]="picker1" [(ngModel)]="filters.end_date">
+                        <button mat-icon-button matIconSuffix matTooltip="Limpiar" (click)="clean('end_date')">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                        <mat-hint>MM/DD/AAAA</mat-hint>
+                        <mat-datepicker-toggle matIconSuffix [for]="picker1"></mat-datepicker-toggle>
+                        <mat-datepicker #picker1></mat-datepicker>
+                      </mat-form-field>
+                    <mat-form-field class="col-12 col-sm-6 col-md-6">
+                        <mat-label>Estatus</mat-label>
+                        <mat-select [(ngModel)]="filters.status">
+                            <mat-option *ngFor="let status of status_options" [value]="status.value">
+                                {{status.description}}
+                            </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    <mat-form-field class="col-12 col-sm-6 col-md-6">
+                        <mat-label>Periodicidad</mat-label>
+                        <mat-select [(ngModel)]="filters.periodicity">
+                            <mat-option *ngFor="let periodicity of periodicity_options" [value]="periodicity.value">
+                                {{periodicity.description}}
+                            </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+            </section>
+        </section>
+        <section class="col-12 col-sm-2 col-md-2 d-flex justify-content-center align-items-center">
+            <button mat-fab matTooltip="Buscar" color="primary" (click)="search()">
+                <mat-icon>search</mat-icon>
+            </button>
+        </section>
+    </section>
+
+    <!--PIPE SEARCH BUSSINES SERVICE-->
+    <div class="row">
+            <mat-form-field class="col-12 col-sm-6 col-md-6">
+                <mat-label>Servicio</mat-label>
+                <input type="text" [(ngModel)]="service_name" matInput>
+            </mat-form-field>
+    </div>
+
+       <!--PAGINATOR-->
+       <div class="row mt-2 p-2">
+        <mat-paginator #paginator class="demo-paginator" (page)="handlePageEvent($event)" [length]="length"
+            [pageSize]="pageSize" [disabled]="false" [showFirstLastButtons]="showFirstLastButtons"
+            [pageSizeOptions]="showPageSizeOptions ? pageSizeOptions : []" [hidePageSize]="hidePageSize"
+            [pageIndex]="pageIndex" aria-label="Select page">
+        </mat-paginator>
+        </div>
+
+    <!--BUSSINE SERVICES DATA TABLE-->
+    <section class="row mt-2 p-2" *ngIf="services.length > 0; else templateIfNotServices">
+        <section class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Nombre</th>
+                        <th>Fecha De Registro</th>
+                        <th>Periodicidad</th>
+                        <th>Estatus</th>
+                        <th>Editar</th>
+                        <th>Pagar</th>
+                        <th>Eliminar</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let service of services | bussinesServicesPipe:service_name; index as i">
+                        <td>{{service.id}}</td>
+                        <td>{{service.name}}</td>
+                        <td>{{service.registation_date}}</td>
+                        <td>{{service.periodicity}}</td>
+                        <td>{{service.status == true ? 'Activo':'Inactivo'}}</td>
+                        <td>
+                            <button mat-fab matTooltip="Editar" color="primary" (click)="openDialogEditService('500','500',service)">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                        </td>
+                        <td>
+                            <button mat-fab matTooltip="Pagar" color="primary" (click)="openDialogPayService('500','500',service)">
+                                <mat-icon>attach_money</mat-icon>
+                            </button>
+                        </td>
+                        <td>
+                            <button mat-fab matTooltip="Eliminar" color="primary" (click)="deleteService(service.id!)">
+                                <mat-icon>delete</mat-icon>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+
+            </table>
+        </section>
+    </section>
+
+    <ng-template #templateIfNotServices>
+        <div class="col-12 d-flex justify-content-center mt-2 p-2">
+            <h2>Sin resultados</h2>
+        </div>
+    </ng-template>
+</div>

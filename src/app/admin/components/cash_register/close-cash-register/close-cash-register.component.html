@@ -1,0 +1,399 @@
+<div class="row">
+
+    <!--TITLE-->
+    <section class="row mt-2 p-2 ">
+        <h2 class="d-flex justify-content-center align-items-center">Cierre De Caja</h2>
+    </section>
+    <!--SELECT CASH REGISTER-->
+    <section class="row d-flex justify-content-center mt-2 p-2">
+        <!--
+            <mat-form-field class="col-12 col-sm-8 col-md-8">
+                <mat-label>Apertura De Caja</mat-label>
+                <input type="text" readonly matInput>
+
+                <button mat-icon-button matTooltip="Seleccionar apertura de caja" matIconSuffix>
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </mat-form-field>
+            -->
+        <button mat-raised-button class="col-12 col-sm-3 col-md-3"
+            (click)="openDialogSelectOpeningCashRegitser('500','500')">
+            Seleccionar caja
+        </button>
+
+    </section>
+
+    <section class="row d-flex justify-content-between mt-4" *ngIf="opening_cash_register != undefined">
+
+
+        <div class="col-12 col-sm-6 col-md-6 d-flex justify-content-center mt-3">
+            <span class="info"> <b>Usuario:</b> {{opening_cash_register.name}} {{opening_cash_register.last_name}}
+                {{opening_cash_register.second_last_name}}</span>
+        </div>
+        <div class="col-12 col-sm-6 col-md-6 d-flex justify-content-center mt-3">
+            <span class="info">
+                <b>Fecha De Apertura: </b> {{opening_cash_register.opening_date}}
+            </span>
+        </div>
+        <div class="col-12 col-sm-6 col-md-6 d-flex justify-content-center mt-3">
+            <span class="info">
+                <b>Id De Aprtura: </b>{{opening_cash_register.id}}
+            </span>
+        </div>
+        <div class="col-12 col-sm-6 col-md-6 d-flex justify-content-center mt-3">
+            <span class="info">
+                <b>Fecha De Cierre: </b> {{date}}
+            </span>
+        </div>
+
+
+    </section>
+
+    <!--SALES-->
+    <section class="row d-flex p-3 mt-4">
+
+        <section class="table-responsive">
+
+            <!--CASH PAYMENTS-->
+            <table class="table table-hover mt-3" *ngIf="cash_sales.length > 0">
+                <thead>
+                    <tr>
+                        <th>Pagos en efectivo</th>
+                        <th>
+                            <mat-icon>payments</mat-icon>
+                        </th>
+                    </tr>
+                </thead>
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Método De Pago</th>
+                        <th>Subtotal</th>
+                        <th>Iva</th>
+                        <th>Total</th>
+                        <th>Detalle</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let cash_sale of cash_sales">
+                        <td>{{cash_sale.order_id}}</td>
+                        <td>{{cash_sale.payment_method}}</td>
+                        <td>{{cash_sale.subtotal | currency}}</td>
+                        <td>{{cash_sale.iva | currency}}</td>
+                        <td>{{cash_sale.total | currency}}</td>
+                        <td>
+                            <button mat-mini-fab matTooltip="Ver detalle de la venta" color="primary"
+                                (click)="openDialogViewOrderDetail('500','500',cash_sale,false,true)">
+                                <mat-icon>info</mat-icon>
+                            </button>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td class="text-success fw-bold">Total</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="text-success fw-bold">{{close_cash_register_data.cash_payments.cash_total |
+                            currency}}</td>
+                    </tr>
+                </tbody>
+
+            </table>
+
+            <!--TRANSFER PAYMENTS-->
+            <table class="table table-hover mt-3" *ngIf="transfer_sales.length > 0">
+                <thead>
+                    <tr>
+                        <th>Pagos con trasnferéncia</th>
+                        <th>
+                            <mat-icon>account_balance</mat-icon>
+                        </th>
+                    </tr>
+                </thead>
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Método De Pago</th>
+                        <th>Subtotal</th>
+                        <th>Iva</th>
+                        <th>Total</th>
+                        <th>Detalle</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let trasnfer_sale of transfer_sales">
+                        <td>{{trasnfer_sale.order_id}}</td>
+                        <td>{{trasnfer_sale.payment_method}}</td>
+                        <td>{{trasnfer_sale.subtotal | currency}}</td>
+                        <td>{{trasnfer_sale.iva | currency}}</td>
+                        <td>{{trasnfer_sale.total | currency}}</td>
+                        <td>
+                            <button mat-mini-fab matTooltip="Ver detalle de la venta" color="primary"
+                                (click)="openDialogViewOrderDetail('500','500',trasnfer_sale,false,true)">
+                                <mat-icon>info</mat-icon>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-success fw-bold">Total</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="text-success fw-bold">{{close_cash_register_data.transfer_payments.transfer_total |
+                            currency}}</td>
+                    </tr>
+
+                </tbody>
+            </table>
+
+            <!--CARD PAYMENTS-->
+            <table class="table table-hover mt-3" *ngIf="card_sales.length > 0">
+                <thead>
+                    <tr>
+                        <th>Pagos en tarjeta</th>
+                        <th>
+                            <mat-icon>credit_card</mat-icon>
+                        </th>
+                    </tr>
+                </thead>
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Método De Pago</th>
+                        <th>Subtotal</th>
+                        <th>Iva</th>
+                        <th>Total</th>
+                        <th>Detalle</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let card_sale of card_sales">
+                        <td>{{card_sale.order_id}}</td>
+                        <td>{{card_sale.payment_method}}</td>
+                        <td>{{card_sale.subtotal | currency}}</td>
+                        <td>{{card_sale.iva | currency}}</td>
+                        <td>{{card_sale.total | currency}}</td>
+                        <td>
+                            <button mat-mini-fab matTooltip="Ver detalle de la venta" color="primary"
+                                (click)="openDialogViewOrderDetail('500','500',card_sale,false,true)">
+                                <mat-icon>info</mat-icon>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-success fw-bold">Total</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="text-success fw-bold">{{close_cash_register_data.card_payments.card_total |
+                            currency}}</td>
+                    </tr>
+
+                </tbody>
+            </table>
+
+
+            <!--DEFFER PAYMENTS-->
+            <table class="table table-hover mt-3" *ngIf="deffer_sales.length > 0">
+                <thead>
+                    <tr>
+                        <th>Pagos diferidos</th>
+                        <th>
+                            <mat-icon>account_tree</mat-icon>
+                        </th>
+                    </tr>
+                </thead>
+                <thead>
+                    <tr>
+                        <th>Orden</th>
+                        <th>Primer Método De Pago</th>
+                        <th>Monto Primer Método De Pago</th>
+                        <th>Segundo Método De Pago</th>
+                        <th>Monto Segundo Método De Pago</th>
+                        <th>Subtotal</th>
+                        <th>Iva</th>
+                        <th>Total</th>
+                        <th>Detalle</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let deffer_sale of deffer_sales">
+                        <td>{{deffer_sale.order_id}}</td>
+                        <td>{{deffer_sale.first_payment_payment_method}}</td>
+                        <td>{{deffer_sale.first_payment_amount | currency}}</td>
+                        <td>{{deffer_sale.second_payment_payment_method}}</td>
+                        <td>{{deffer_sale.second_payment_amount | currency}}</td>
+                        <td>{{deffer_sale.subtotal | currency}}</td>
+                        <td>{{deffer_sale.iva | currency}}</td>
+                        <td>{{deffer_sale.subtotal | currency}}</td>
+
+                        <td>
+                            <button mat-mini-fab matTooltip="Ver detalle de la venta" color="primary"
+                                (click)="openDialogViewOrderDetail('500','500',deffer_sale,false,true,true)">
+                                <mat-icon>info</mat-icon>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-success fw-bold">Total</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="text-success fw-bold">{{close_cash_register_data.deffered_payments.total |
+                            currency}}</td>
+                    </tr>
+
+                </tbody>
+            </table>
+
+            <!--TIPS-->
+            <table class="table table-hover mt-3" *ngIf="tips_sales.length > 0">
+                <thead>
+                    <tr>
+                        <th>Propinas</th>
+                        <th>
+                            <mat-icon>payments</mat-icon>
+                        </th>
+                    </tr>
+                </thead>
+                <thead>
+                    <tr>
+                        <th>Orden</th>
+                        <th>Propina</th>
+                        <th>Detalle</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let sale of tips_sales">
+                        <td>{{sale.order_id}}</td>
+                        <td>{{sale.tip | currency}}</td>
+                        <td>
+                            <button mat-mini-fab matTooltip="Ver detalle de la venta" color="primary"
+                                (click)="openDialogViewOrderDetail('500','500',sale,false,true,true)">
+                                <mat-icon>info</mat-icon>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-danger fw-bold">Total</td>
+                        <td class="text-danger fw-bold">{{close_cash_register_data.tips.total |
+                            currency}}</td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </section>
+
+    </section>
+
+    <mat-divider class="mt-2"></mat-divider>
+
+    <!--RESUM SALES BY TYPE OF PAYMENTS-->
+    <div class="row d-flex justify-content-around mt-2 p-2" *ngIf="close_cash_register_data != undefined">
+
+        <!--CASH-->
+        <div class="col-12 mt-4 col-sm-3 col-md-3 d-flex flex-column align-items-center"
+            style="border-right: dashed 2px #444;">
+            <span style="font-size: 20px; padding: 10px;">
+                <b>Efectivo</b>
+            </span>
+            <span style="font-size: 18px;">
+                <b>Subtotal: </b> {{close_cash_register_data.cash_payments.cash_subtotals | currency}}
+            </span>
+            <span style="font-size: 18px;">
+                <b>Iva: </b> {{close_cash_register_data.cash_payments.cash_iva_total | currency}}
+            </span>
+            <span style="font-size: 18px;">
+                <b>Total: </b> {{close_cash_register_data.cash_payments.cash_total | currency}}
+            </span>
+        </div>
+
+        <!--TRANSFER-->
+        <div class="col-12 mt-4 col-sm-3 col-md-3 d-flex flex-column align-items-center"
+            style="border-right: dashed 2px #444;">
+            <span style="font-size: 20px; padding: 10px;">
+                <b>Transferencia</b>
+            </span>
+            <span style="font-size: 18px;">
+                <b>Subtotal: </b> {{close_cash_register_data.transfer_payments.transfer_subtotals | currency}}
+            </span>
+            <span style="font-size: 18px;">
+                <b>Iva: </b> {{close_cash_register_data.transfer_payments.transfer_iva_total | currency}}
+            </span>
+            <span style="font-size: 18px;">
+                <b>Total: </b> {{close_cash_register_data.transfer_payments.transfer_total | currency}}
+            </span>
+        </div>
+
+        <!--CARD-->
+        <div class="col-12 mt-4 col-sm-3 col-md-3 d-flex flex-column align-items-center"
+            style="border-right: dashed 2px #444;">
+            <span style="font-size: 20px; padding: 10px;">
+                <b>Tarjeta</b>
+            </span>
+            <span style="font-size: 18px;">
+                <b>Subtotal: </b> {{close_cash_register_data.card_payments.card_subtotals | currency}}
+            </span>
+            <span style="font-size: 18px;">
+                <b>Iva: </b> {{close_cash_register_data.card_payments.card_iva_total | currency}}
+            </span>
+            <span style="font-size: 18px;">
+                <b>Total: </b> {{close_cash_register_data.card_payments.card_total | currency}}
+            </span>
+        </div>
+
+        <!--DEFFERED-->
+        <div class="col-12 mt-4 col-sm-3 col-md-3 d-flex flex-column align-items-center"
+            style="border-right: dashed 2px #444;">
+            <span style="font-size: 20px; padding: 10px;">
+                <b>Diferidos</b>
+            </span>
+            <span style="font-size: 18px;">
+                <b>Efectivo: </b> {{close_cash_register_data.deffered_payments.cash_total | currency}}
+            </span>
+            <span style="font-size: 18px;">
+                <b>Tarjeta: </b> {{close_cash_register_data.deffered_payments.card_total | currency}}
+            </span>
+            <span style="font-size: 18px;">
+                <b>Transferéncia: </b> {{close_cash_register_data.deffered_payments.transfer_total || 0 | currency}}
+            </span>
+            <span style="font-size: 18px;">
+                <b>Total: </b> {{close_cash_register_data.deffered_payments.total | currency}}
+            </span>
+        </div>
+
+
+
+
+
+        <!--TOTAL OPERATIONS AFTER TIPS-->
+        <div class="col-12 col-sm-12 col-md-12  mt-4  d-flex flex-column align-items-center">
+            <span style="font-size: 18px;">
+                <b class="text-success fw-bold"> Operaciones Despues De Propinas</b>
+            </span>
+            <span>
+                <b class="text-success fw-bold" style="font-size: 18px;">
+                    {{close_cash_register_data.total_operations - close_cash_register_data.tips.total | currency}}
+                </b>
+            </span>
+        </div>
+
+
+    </div>
+
+
+
+
+    <div class="row d-flex justify-content-center align-items-center mt-2 p-2">
+
+        <button mat-raised-button class="col-12 col-sm-3 col-md-3" (click)="closeCashRegister()"
+            [disabled]="opening_cash_register == undefined">
+            Cerrar Caja
+        </button>
+
+    </div>
+</div>

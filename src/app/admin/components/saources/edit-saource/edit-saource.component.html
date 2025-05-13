@@ -1,0 +1,52 @@
+
+<h1 mat-dialog-title class="d-flex justify-content-center align-items-center mt-2 p-2">Nuevo Platillo</h1>
+<div mat-dialog-content>
+
+    <form [formGroup]="saource" class="row">
+        <mat-form-field class="col-12">
+            <mat-label>Nombre</mat-label>
+            <input type="text" matInput formControlName="name">
+            <mat-error *ngIf="saource.controls.name.hasError('required') && saource.controls.name.touched ">El campo es requerido</mat-error>
+            <mat-error *ngIf="saource.controls.name.hasError('pattern') && saource.controls.name.touched">Solo caractéres alfanuméricos y " . - "</mat-error>
+        </mat-form-field>
+        <mat-form-field class="col-12">
+            <mat-label>Precio</mat-label>
+            <input type="number" matInput formControlName="price">
+            <mat-icon matIconSuffix>attach_money</mat-icon>
+            <mat-error *ngIf="saource.controls.price.hasError('required') && saource.controls.price.touched ">El campo es requerido</mat-error>
+            <mat-error *ngIf="saource.controls.price.hasError('min') && saource.controls.price.touched">El precio debe ser mayor que 0</mat-error>
+        </mat-form-field>
+        <mat-form-field class="col-12">
+            <mat-label>Categoría</mat-label>
+            <input type="text" matInput [formControl]="category_name" readonly="true" >
+            <button mat-icon-button matIconSuffix matTooltip="Seleccionar categoría" (click)="openDialogSelectCategory('500','500')">
+                <mat-icon>category</mat-icon>
+            </button>
+            <button mat-icon-button matIconSuffix matTooltip="Limpiar" (click)="cleanInputs('category')">
+                <mat-icon>delete</mat-icon>
+            </button>
+            <mat-error *ngIf="saource.controls.category.hasError('category') && saource.controls.category.touched ">El campo es requerido</mat-error>
+        </mat-form-field>
+        <mat-form-field class="col-12">
+            <mat-label>Estatus</mat-label>
+            <mat-select formControlName="status">
+                <mat-option *ngFor="let status of status_options" [value]="status.value">
+                    {{status.description}}
+                </mat-option>
+            </mat-select>
+            <mat-error *ngIf="saource.controls.price.hasError('required') && saource.controls.price.touched ">El campo es requerido</mat-error>
+            <mat-error *ngIf="saource.controls.price.hasError('min') && saource.controls.price.touched">El precio debe ser mayor que 0</mat-error>
+        </mat-form-field>
+    </form>
+
+
+</div>
+<div mat-dialog-actions class="row d-flex justify-content-between p-4">
+  <div class="col-4 d-flex justify-content-center">
+    <button mat-raised-button (click)="close()" class="actionButtons" color="primary">Cancelar</button>
+  </div>
+  <div class="col-4 d-flex justify-content-center">
+    <button mat-raised-button (click)="edit()" class="actionButtons" color="primary" [disabled]="saource.status == 'INVALID' ">Registrar</button>
+  </div>
+
+</div>

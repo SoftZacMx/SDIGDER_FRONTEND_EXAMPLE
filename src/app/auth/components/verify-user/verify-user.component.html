@@ -1,0 +1,39 @@
+
+<section class="row h-100 d-flex align-items-center ">
+
+
+    <section class="logoSection col-12 flex-column d-flex align-items-center">
+        <div class="col-12 d-flex justify-content-center">
+            <img src="../../../../assets/images/food.png" alt="Logo image">
+        </div>
+        <div class="col-12 d-flex justify-content-center">
+            <h2>SIDGDER</h2>
+        </div>
+    </section>
+
+
+<section class="verifyUserinInfoSection col-12 d-flex align-items-center justify-content-center">
+
+
+    <!--USER DATA FORM-->
+    <form class="row w-100 d-flex flex-column align-items-center">
+
+        <!--EMAIL-->
+        <mat-form-field class="col-12 col-md-6" >
+            <mat-label>Correo</mat-label>
+            <input type="text" [formControl]="user_email" matInput>
+            <mat-error *ngIf="user_email.hasError('required')">El campo es requerido</mat-error>
+            <mat-error *ngIf="user_email.hasError('email')">Ingrese un correo valido</mat-error>
+        </mat-form-field>
+
+        <!--ACTION BUTTONS-->
+        <div class="row w-100 mt-4 d-flex justify-content-center">
+            <button mat-raised-button class="col-12 col-md-6" [disabled]="user_email.status == 'INVALID' " (click)="verify()" color="primary">Verificar correo</button>
+        </div>
+        
+    </form>
+
+</section>
+
+
+</section>

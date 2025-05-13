@@ -1,0 +1,73 @@
+<h1 mat-dialog-title class="d-flex justify-content-center mt-2 p-2">Editar Usuario</h1>
+<div mat-dialog-content>
+
+  <form [formGroup]="user">
+    <div class="row d-flex justify-content-between">
+      <mat-form-field class="col-12 col-sm-6 col-md-6 mt-2">
+        <mat-label>Nombre</mat-label>
+        <input type="text" matInput formControlName="name" maxlength="100">
+        <mat-hint> {{user.controls.name.value.length}} / 100</mat-hint>
+        <mat-error *ngIf="user.controls.name.hasError('required')">El campo es requerido</mat-error>
+        <mat-error *ngIf="user.controls.name.hasError('pattern')">Solo letras y espacios</mat-error>
+      </mat-form-field>
+      <mat-form-field class="col-12 col-sm-6 col-md-6 mt-2">
+        <mat-label>Apellido Paterno</mat-label>
+        <input type="text" matInput formControlName="last_name" maxlength="100">
+        <mat-hint> {{user.controls.last_name.value.length}} / 100</mat-hint>
+        <mat-error *ngIf="user.controls.last_name.hasError('required')">El campo es requerido</mat-error>
+        <mat-error *ngIf="user.controls.last_name.hasError('pattern')">Solo letras y espacios</mat-error>
+      </mat-form-field>
+      <mat-form-field class="col-12 col-sm-6 col-md-6 mt-2">
+        <mat-label>Apellido Materno</mat-label>
+        <input type="text" matInput formControlName="second_last_name" maxlength="100">
+        <mat-hint> {{user.controls.second_last_name.value.length}} / 100</mat-hint>
+        <mat-error *ngIf="user.controls.second_last_name.hasError('required')">El campo es requerido</mat-error>
+        <mat-error *ngIf="user.controls.second_last_name.hasError('pattern')">Solo letras y espacios</mat-error>
+      </mat-form-field>
+      <mat-form-field class="col-12 col-sm-6 col-md-6 mt-2">
+        <mat-label>Email</mat-label>
+        <input type="text" matInput formControlName="email" maxlength="100">
+        <mat-hint>{{user.controls.email.value.length}} / 100</mat-hint>
+        <mat-error *ngIf="user.controls.email.hasError('required')">El campo es requerido</mat-error>
+        <mat-error *ngIf="user.controls.email.hasError('email')">Ingrese un correo valido</mat-error>
+      </mat-form-field>
+      <mat-form-field class="col-12 col-sm-6 col-md-6 mt-2">
+        <mat-label>Teléfono</mat-label>
+        <input type="text" matInput formControlName="phone" maxlength="10">
+        <mat-hint>{{user.controls.phone.value.length}} / 10</mat-hint>
+        <mat-error *ngIf="user.controls.phone.hasError('required')">El campo es requerido</mat-error>
+        <mat-error *ngIf="user.controls.phone.hasError('minlength') || user.controls.phone.hasError('maxlength')">Ingrese un número valido</mat-error>
+        <mat-error *ngIf="user.controls.phone.hasError('pattern')">Solo número del 0-9</mat-error>
+      </mat-form-field>
+      <mat-form-field class="col-12 col-sm-6 col-md-6 mt-2">
+        <mat-label>Estatus</mat-label>
+        <mat-select formControlName="status">
+            <mat-option *ngFor="let status of status_options" [value]="status.value">
+              {{status.description}}
+            </mat-option>
+        </mat-select>
+        <mat-error *ngIf="user.controls.status.hasError('required')">El campo es requerido</mat-error>
+      </mat-form-field>
+      <mat-form-field class="col-12 col-sm-6 col-md-6 mt-2">
+        <mat-label>Rol</mat-label>
+        <mat-select formControlName="rol">
+            <mat-option *ngFor="let rol of roles" [value]="rol.value">
+              {{rol.description}}
+            </mat-option>
+        </mat-select>
+        <mat-error *ngIf="user.controls.rol.hasError('required')">El campo es requerido</mat-error>
+      </mat-form-field>
+    </div>
+
+  </form>
+
+</div>
+<div mat-dialog-actions class="row d-flex justify-content-between p-4">
+  <div class="col-4 d-flex justify-content-center">
+    <button mat-raised-button (click)="close()" class="actionButtons" color="primary">Cancelar</button>
+  </div>
+  <div class="col-4 d-flex justify-content-center">
+    <button mat-raised-button class="actionButtons" color="primary" (click)="edit()" [disabled]="user.status == 'INVALID' ">Registrar</button>
+  </div>
+
+</div>

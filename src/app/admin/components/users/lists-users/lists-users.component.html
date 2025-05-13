@@ -1,0 +1,113 @@
+<div class="row d-flex justify-content-center">
+
+    <!--CREATE USER-->
+    <section class="row w-100 mt-2 p-2 d-flex justify-content-center">
+
+        <div class="col-12 col-md-4">
+            <button mat-raised-button color="primary" class="w-100" (click)="openDialogCreateUser('500','500')">
+                Nuevo Usuario
+            </button>
+        </div>
+
+    </section>
+
+    <!--FILTERS SECTION-->
+    <section class="row w-100 d-flex justify-content-between p-2 mt-2">
+
+        <!--FILTERS-->
+        <div class="col-12 col-md-10 d-flex justify-content-center align-items-center">
+            <div class="row w-100 d-flex justify-content-between">
+
+                <mat-form-field class="col-12 col-sm-6 col-md-6">
+                    <mat-label>Status</mat-label>
+                    <mat-select [(ngModel)]="filters.status">
+                        <mat-option *ngFor="let option of status_options" [value]="option.value">
+                            {{option.description}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field class="col-12 col-sm-6 col-md-6">
+                    <mat-label>Rol</mat-label>
+                    <mat-select [(ngModel)]="filters.rol">
+                        <mat-option *ngFor="let rol of roles" [value]="rol.value">
+                            {{rol.description}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+            </div>
+        </div>
+
+        <!--SEARCH BUTTON-->
+        <div class="col-12 col-md-2 d-flex justify-content-center align-items-center">
+            <button mat-fab color="primary" (click)="search()">
+                <mat-icon matTooltip="Buscar" >search</mat-icon>
+            </button>
+        </div>
+
+    </section>
+
+    <!--PAGINATOR-->
+    <section class="col-12 mt-2 p-2">
+        <mat-paginator [length]="length" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions" aria-label="Select page"  (page)="handlePageEvent($event)">
+        </mat-paginator>
+
+    </section>
+
+    <!--FILTER USER PIPE-->
+    <section class="row w-100 mt-2 p-2">
+        <div class="col-12 col-md-6">
+            <mat-form-field class="w-100">
+                <mat-label>Nombre</mat-label>
+                <input type="text" matInput [(ngModel)]="user_name">
+            </mat-form-field>
+        </div>
+    </section>
+
+    <!--TABLE DATA-->
+    <section class="row w-100 mt-2 p-2">
+
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Nombre</th>
+                        <th>Apellido Paterno</th>
+                        <th>Apellido Materno</th>
+                        <th>Rol</th>
+                        <th>Correo</th>
+                        <th>Editar</th>
+                        <th>Eliminar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let user of users | usersPipe:user_name ;index as i">
+                        <td>{{user.id}}</td>
+                        <td>{{user.name}}</td>
+                        <td>{{user.last_name}}</td>
+                        <td>{{user.second_last_name}}</td>
+                        <td>{{user.rol}}</td>
+                        <td>{{user.email}}</td>
+                        <td>
+                            <button mat-mini-fab color="primary" matTooltip="Editar" (click)="openDialogEditUser('500','500',user)">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                        </td>
+                        <td>
+                            <button mat-mini-fab color="primary" matTooltip="Eliminar" (click)="deleteUser(user.id!)">
+                                <mat-icon>delete</mat-icon>
+                            </button>
+                        </td>
+
+
+                    </tr>
+                </tbody>
+
+            </table>
+        </div>
+
+    </section>
+
+</div>

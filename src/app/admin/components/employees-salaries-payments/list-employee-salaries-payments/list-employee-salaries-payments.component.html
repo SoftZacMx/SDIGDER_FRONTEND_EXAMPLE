@@ -1,0 +1,133 @@
+<div class="row">
+
+
+    <!--TITLE-->
+    <section class="row mt-2 p-2">
+        <h2 class="d-flex justify-content-center align-items-center">Pago De Salarios</h2>
+    </section>
+
+
+    <!--NEW PAYMENT-->
+    <section class="row d-flex justify-content-center align-items-center">
+        <button mat-raised-button class="col-12 col-sm-5 col-md-6" color="primary" matTooltip="Registrar nuevo pago" (click)="openDialogCreateEmployeeSalariePayment('500','500')">
+            Nuevo Pago
+        </button>
+    </section>
+
+
+    <!--FILTERS-->
+    <section class="row mt-2 p-2">
+        <section class="col-12 col-sm-10 col-md-10">
+            <section class="row">
+                <mat-form-field class="col-12 col-sm-6 col-md-6">
+                    <mat-label>Desde</mat-label>
+                    <input matInput [matDatepicker]="picker" [(ngModel)]="filters.start_date">
+                    <button mat-icon-button matIconSuffix matTooltip="Limpiar" (click)="clean('start_date')" [disabled]="rol == 'Manager' " >
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                    <mat-hint>MM/DD/AAAA</mat-hint>
+                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+                <mat-form-field class="col-12 col-sm-6 col-md-6">
+                    <mat-label>Hasta</mat-label>
+                    <input matInput [matDatepicker]="picker1" [(ngModel)]="filters.end_date">
+                    <button mat-icon-button matIconSuffix matTooltip="Limpiar" (click)="clean('end_date')">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                    <mat-hint>MM/DD/AAAA</mat-hint>
+                    <mat-datepicker-toggle matIconSuffix [for]="picker1"></mat-datepicker-toggle>
+                    <mat-datepicker #picker1></mat-datepicker>
+                </mat-form-field>
+                <mat-form-field class="col-12 col-sm-6 col-md-6">
+                    <mat-label>Método De Pago</mat-label>
+                    <mat-select [(ngModel)]="filters.payment_method">
+                        <mat-option *ngFor="let option of payment_methods_options" [value]="option.value">
+                            {{option.description}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field class="col-12 col-sm-6 col-md-6">
+                    <mat-label>Usuario</mat-label>
+                    <input type="text" name="" id="" readonly [(ngModel)]="user" matInput>
+                    <button mat-icon-button matIconSuffix matTooltip="Seleccionar usuario" (click)="openDialogSelectUser('500','500')">
+                        <mat-icon>people</mat-icon>
+                    </button>
+                    <button mat-icon-button matIconSuffix matTooltip="Limpiar" (click)="clean('user')">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </mat-form-field>
+
+            </section>
+        </section>
+        <section class="col-12 col-sm-2 col-md-2 d-flex justify-content-center align-items-center">
+            <button mat-fab matTooltip="Buscar" color="primary" (click)="search()">
+                <mat-icon>search</mat-icon>
+            </button>
+        </section>
+    </section>
+
+    <!--PIPE SEARCH BUSSINES SERVICE-->
+    <div class="row">
+        <mat-form-field class="col-12 col-sm-6 col-md-6">
+            <mat-label>Usuario</mat-label>
+            <input type="text" [(ngModel)]="user_name" matInput>
+        </mat-form-field>
+    </div>
+
+    <!--PAGINATOR-->
+    <div class="row mt-2 p-2">
+        <mat-paginator #paginator class="demo-paginator" (page)="handlePageEvent($event)" [length]="length"
+            [pageSize]="pageSize" [disabled]="false" [showFirstLastButtons]="showFirstLastButtons"
+            [pageSizeOptions]="showPageSizeOptions ? pageSizeOptions : []" [hidePageSize]="hidePageSize"
+            [pageIndex]="pageIndex" aria-label="Select page">
+        </mat-paginator>
+    </div>
+
+    <!--EMPLOYEES SALARIES PAYMENTS DATA TABLE-->
+    <section class="row mt-2 p-2" *ngIf="payments.length > 0; else templateIfNotPayments">
+        <section class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Nombre</th>
+                        <th>Fecha De Pago</th>
+                        <th>Cantidad</th>
+                        <th>Método De Pago</th>
+                        <th>Editar</th>
+                        <th>Eliminar</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let payment of payments | usersPipe:user_name; index as i">
+                        <td>{{payment.id}}</td>
+                        <td>{{payment.name}} {{payment.last_name}} {{payment.second_last_name}} </td>
+                        <td>{{payment.date}}</td>
+                        <td>{{payment.amount | currency}}</td>
+                        <td>{{payment.payment_method}}</td>
+                        <td>
+                            <button mat-fab matTooltip="Editar" color="primary" (click)="openDialogEditEmployeeSalarie('500','500',payment)">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                        </td>
+                        <td>
+                            <button mat-fab matTooltip="Eliminar" color="primary" (click)="deletePayment(payment.id!)">
+                                <mat-icon>delete</mat-icon>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+
+            </table>
+        </section>
+    </section>
+
+    <ng-template #templateIfNotPayments>
+        <div class="col-12 d-flex justify-content-center mt-2 p-2">
+            <h2>Sin resultados</h2>
+        </div>
+    </ng-template>
+
+</div>

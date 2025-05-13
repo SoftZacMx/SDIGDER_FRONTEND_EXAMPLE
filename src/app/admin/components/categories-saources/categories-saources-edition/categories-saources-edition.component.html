@@ -1,0 +1,32 @@
+<h1 mat-dialog-title class="d-flex justify-content-center align-items-center mt-2 p-2">Nueva Categoría De Platillos</h1>
+<div mat-dialog-content>
+    <form [formGroup]="category">
+        <div class="row d-flex align-items-center">
+            <mat-form-field class="col-12 mt-2">
+                <mat-label>Nombre</mat-label>
+                <input type="text" formControlName="name" maxlength="50" matInput>
+                <mat-hint>{{category.controls.name.value.length}} / 50</mat-hint>
+                <mat-error *ngIf="category.controls.name.hasError('required')">El campo es requerido</mat-error>
+                <mat-error *ngIf="category.controls.name.hasError('maxlength')">Máximo 50 caractéres</mat-error>
+            </mat-form-field>
+            <mat-form-field class="col-12 mt-2">
+                <mat-label>Estatus</mat-label>
+                <mat-select formControlName="status">
+                    <mat-option *ngFor="let status of status_options" [value]="status.value">
+                        {{status.description}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+    </form>
+
+</div>
+<div mat-dialog-actions class="row d-flex justify-content-between p-4">
+    <div class="col-12 col-sm-6 col-md-6 d-flex justify-content-center">
+        <button mat-raised-button (click)="close()" class="actionButtons w-100" color="primary">Cancelar</button>
+    </div>
+    <div class="col-12 col-sm-6 col-md-6 d-flex justify-content-center">
+        <button mat-raised-button (click)="save()" class="actionButtons w-100" color="primary" [disabled]="category.status == 'INVALID'">Registrar</button>
+    </div>
+
+</div>

@@ -1,0 +1,149 @@
+<h1
+  mat-dialog-title
+  class="d-flex justify-content-center align-items-center mt-2 p-2"
+>
+  Categorias De Platillos
+</h1>
+<div mat-dialog-content>
+  <div class="row d-flex justify-content-center">
+    <!--TITTLE-->
+    <div class="row mt-2">
+      <h2 class="d-flex justify-content-center">Categorias De Platillos</h2>
+    </div>
+
+    <!--FILTERS-->
+    <div class="row">
+      <div class="col-10">
+        <div class="row">
+          <mat-form-field class="col-12">
+            <mat-label>Desde</mat-label>
+            <input
+              matInput
+              [matDatepicker]="picker"
+              [(ngModel)]="filters.start_date"
+              readonly="true"
+            />
+            <mat-hint>MM/DD/AAAA</mat-hint>
+            <mat-datepicker-toggle
+              matIconSuffix
+              [for]="picker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            <button
+              mat-icon-button
+              matIconSuffix
+              (click)="cleanInputsFilters('start_date')"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+          </mat-form-field>
+
+          <mat-form-field class="col-12">
+            <mat-label>Hasta</mat-label>
+            <input
+              matInput
+              [matDatepicker]="picker1"
+              [(ngModel)]="filters.end_date"
+              readonly="true"
+            />
+            <mat-hint>MM/DD/AAAA</mat-hint>
+            <mat-datepicker-toggle
+              matIconSuffix
+              [for]="picker1"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #picker1></mat-datepicker>
+            <button
+              mat-icon-button
+              matIconSuffix
+              (click)="cleanInputsFilters('end_date')"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+          </mat-form-field>
+
+          <mat-form-field class="col-12">
+            <mat-select [(ngModel)]="filters.status">
+              <mat-option
+                *ngFor="let status of status_options"
+                [value]="status.value"
+              >
+                {{ status.description }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-2 d-flex align-items-center justify-content-center">
+        <button mat-fab matTooltip="Buscar" color="primary" (click)="search()">
+          <mat-icon>search</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <!--PAGINATOR-->
+    <div class="row mt-2 p-2">
+      <mat-paginator
+        #paginator
+        class="demo-paginator"
+        (page)="handlePageEvent($event)"
+        [length]="length"
+        [pageSize]="pageSize"
+        [disabled]="false"
+        [showFirstLastButtons]="showFirstLastButtons"
+        [pageSizeOptions]="showPageSizeOptions ? pageSizeOptions : []"
+        [hidePageSize]="hidePageSize"
+        [pageIndex]="pageIndex"
+        aria-label="Select page"
+      >
+      </mat-paginator>
+    </div>
+
+    <!--CATEGORIES PIPE-->
+    <div class="row p-4">
+      <mat-form-field class="col-12">
+        <mat-label>Categoria</mat-label>
+        <input type="text" matInput [(ngModel)]="category_name" />
+      </mat-form-field>
+    </div>
+
+    <!--DATA TABLE-->
+    <div class="row" *ngIf="categories.length > 0; else noCategories">
+      <mat-selection-list
+        multiple="false"
+        #saourcesCategoriesList
+        (selectionChange)="saveSelection(saourcesCategoriesList)"
+      >
+        <mat-list-option
+          *ngFor="
+            let category of categories | categoriesSaourcesPipe : category_name
+          "
+          [value]="category"
+        >
+          <div matListItemIcon>
+            <mat-icon>category</mat-icon>
+          </div>
+          <div matListItemTitle>{{ category.name }}</div>
+        </mat-list-option>
+      </mat-selection-list>
+    </div>
+
+    <ng-template #noCategories>
+      <div class="row">
+        <h2 class="d-flex justify-content-center">Sin resultados</h2>
+      </div>
+    </ng-template>
+  </div>
+</div>
+
+<div mat-dialog-actions class="row d-flex justify-content-center p-4">
+  <div class="col-6 d-flex justify-content-center">
+    <button
+      mat-raised-button
+      (click)="saveSelection()"
+      class="w-100"
+      color="primary"
+    >
+      Cerrar
+    </button>
+  </div>
+</div>

@@ -1,0 +1,143 @@
+<div class="row d-flex justify-content-center" class="w-100">
+
+    <!--NEW PRODUCT BUTTON-->
+    <div class="row d-flex justify-content-center mt-2 p-2">
+        <div class="col-12 col-sm-4 col-md-4">
+            <button mat-raised-button matTooltip="Crear nuevo producto" color="primary" class="w-100"
+                (click)="openDialogNewProduct('500','500')">
+                Nuevo Producto
+            </button>
+        </div>
+    </div>
+
+    <!--FITERS-->
+    <div class="row d-flex justify-content-between">
+
+        <!--FILTERS FILES-->
+        <div class="col-12 col-sm-10 col-md-10">
+            <div class="row  d-flex justify-content-between mt-2 p-2">
+
+                <mat-form-field class="col-12 col-sm-4 col-md-4">
+                    <mat-label>Estatus</mat-label>
+                    <mat-select [(ngModel)]="filters.status">
+                        <mat-option *ngFor="let option of status_options" [value]="option.value">
+                            {{option.description}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field class="col-12 col-sm-4 col-md-4 ">
+                    <mat-label>Creado por</mat-label>
+                    <input type="text" name="" id="" readonly [(ngModel)]="user" matInput>
+                    <button mat-icon-button matIconSuffix matTooltip="Seleccionar usuario"
+                        (click)="openDialogSelectUser('500','500')">
+                        <mat-icon>people</mat-icon>
+                    </button>
+                    <button mat-icon-button matIconSuffix matTooltip="Limpiar" (click)="clean('user')">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </mat-form-field>
+
+                <mat-form-field class="col-12 col-sm-4 col-md-4 ">
+                    <mat-label>Desde</mat-label>
+                    <input matInput [matDatepicker]="picker" [(ngModel)]="filters.start_date">
+                    <button mat-icon-button matIconSuffix matTooltip="Limpiar" (click)="clean('start_date')">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                    <mat-hint>MM/DD/AAAA</mat-hint>
+                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+
+                <mat-form-field class="col-12 col-sm-4 col-md-4 ">
+                    <mat-label>Hasta</mat-label>
+                    <input matInput [matDatepicker]="picker1" [(ngModel)]="filters.end_date">
+                    <button mat-icon-button matIconSuffix matTooltip="Limpiar" (click)="clean('end_date')">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                    <mat-hint>MM/DD/AAAA</mat-hint>
+                    <mat-datepicker-toggle matIconSuffix [for]="picker1"></mat-datepicker-toggle>
+                    <mat-datepicker #picker1></mat-datepicker>
+                </mat-form-field>
+
+            </div>
+        </div>
+
+        <!--SEARCH BUTTON-->
+        <div class="col-12 col-sm-2 col-md-2 d-flex justify-content-center align-items-center">
+            <button mat-fab matTooltip="Buscar" color="primary" (click)="search()">
+                <mat-icon>search</mat-icon>
+            </button>
+        </div>
+
+    </div>
+
+    <!--PAGINATOR-->
+    <div class="row mt-2 p-2">
+        <mat-paginator #paginator class="demo-paginator" (page)="handlePageEvent($event)" [length]="length"
+            [pageSize]="pageSize" [disabled]="false" [showFirstLastButtons]="showFirstLastButtons"
+            [pageSizeOptions]="showPageSizeOptions ? pageSizeOptions : []" [hidePageSize]="hidePageSize"
+            [pageIndex]="pageIndex" aria-label="Select page">
+        </mat-paginator>
+    </div>
+
+    <!--PRODUCTS PIPE-->
+    <div class="col-12 col-sm-5 col-md-5 mt-2 p-2">
+        <mat-form-field class="w-100">
+            <mat-label>Ingrese el nombre del producto</mat-label>
+            <input type="text" matInput [(ngModel)]="product_name">
+        </mat-form-field>
+    </div>
+
+    <!--PRODUCTS TABLE-->
+    <div class="col-12">
+        <div class="responsive-table" *ngIf="products.length > 0; else noProducts">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Nombre</th>
+                        <th>Fecha De Registro</th>
+                        <th>Usuario</th>
+                        <th>Estatus</th>
+                        <th>Historico De Precios</th>
+                        <th>Descripción</th>
+                        <th>Editar</th>
+                        <th>Eliminar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let product of products  | productsPipe:product_name">
+                        <td>{{product.id}}</td>
+                        <td>{{product.name}}</td>
+                        <td>{{product.registation_date}}</td>
+                        <td>{{product.user_name}} {{product.last_name}} {{product.second_last_name}}</td>
+                        <td>{{product.status == true ? 'Activo':'Inactivo'}}</td>
+                        <td>{{product.price_history}}</td>
+                        <td>{{product.description}}</td>
+
+                        <td>
+                            <button mat-fab color="primary" matTooltip="Editar producto" (click)="openDialogEditProduct('500','500',product)">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                        </td>
+                        <td>
+                            <button mat-fab color="primary" matTooltip="Eliminar producto" (click)="deleteProduct(product.id)">
+                                <mat-icon>delete</mat-icon>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <ng-template #noProducts>
+
+            <div class="row w-100 ">
+                <h2 class="d-flex justify-content-center  align-items-center  ">Sin resultados</h2>
+            </div>
+
+        </ng-template>
+    </div>
+
+</div>

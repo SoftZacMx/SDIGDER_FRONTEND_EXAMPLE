@@ -1,0 +1,49 @@
+<h1 mat-dialog-title class="d-flex justify-content-center align-items-center mt-2 p-2">Editar Producto</h1>
+<div mat-dialog-content>
+
+    <form [formGroup]="product">
+
+        <mat-form-field class="col-12">
+            <mat-label>Nombre</mat-label>
+            <input type="text" maxlength="100" matInput formControlName="name">
+            <mat-hint>{{product.controls.name.value.length}} / 100</mat-hint>
+            <mat-error *ngIf="product.controls.name.hasError('required')">El campo es requerido</mat-error>
+            <mat-error *ngIf="product.controls.name.hasError('pattern')">El texto no debe llevar caractéres especiales</mat-error>
+            <mat-error *ngIf="product.controls.name.hasError('maxlength')">Máximo 100 caractéres</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="col-12">
+            <mat-label>Descripción</mat-label>
+            <textarea type="text" maxlength="100" matInput formControlName="description"></textarea>
+            <mat-hint>{{product.controls.description.value.length}} / 1000</mat-hint>
+            <mat-error *ngIf="product.controls.name.hasError('required')">El campo es requerido</mat-error>
+            <mat-error *ngIf="product.controls.name.hasError('pattern')">El texto no debe llevar caractéres especiales</mat-error>
+            <mat-error *ngIf="product.controls.name.hasError('maxlength')">Máximo 1000 caractéres</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="col-12 mt-2">
+            <mat-label>Estatus</mat-label>
+            <mat-select formControlName="status">
+                <mat-option *ngFor="let option of status_options" [value]="option.value">
+                    {{option.description}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </form>
+
+
+
+</div>
+<div mat-dialog-actions class="row d-flex justify-content-between p-2">
+
+    <div class="col-12 col-sm-4 col-md-4 d-flex justify-content-center mt-2 p-2">
+        <button mat-raised-button (click)="close()" class="w-100" color="primary">Cancelar</button>
+      </div>
+
+  <div class="col-12 col-sm-4 col-md-4 d-flex justify-content-center mt-2 p-2">
+    <button mat-raised-button (click)="edit()" class="w-100" color="primary" [disabled]="product.status == 'INVALID'">Editar</button>
+  </div>
+
+
+
+</div>

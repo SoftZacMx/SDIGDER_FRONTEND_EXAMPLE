@@ -1,0 +1,42 @@
+
+<h1 mat-dialog-title class="d-flex justify-content-center align-items-center mt-2 p-2">Crear Servicio</h1>
+<div mat-dialog-content>
+
+    <form [formGroup]="service">
+        <mat-form-field class="col-12">
+            <mat-label>Nombre</mat-label>
+            <input type="text" matInput formControlName="name" maxlength="60">
+            <mat-hint>{{service.controls.name.value?.length}}/60</mat-hint>
+            <mat-error *ngIf="service.controls.name.hasError('required') && service.controls.name.touched">El campo es requerido</mat-error>
+            <mat-error *ngIf="service.controls.name.hasError('pattern') && service.controls.name.touched">Solo caractéres alfabéticos, puntos y espacios</mat-error>
+            <mat-error *ngIf="service.controls.name.hasError('maxlength') && service.controls.name.touched">El campo puede tener máximo 60 caracteres</mat-error>
+        </mat-form-field>
+        <mat-form-field class="col-12">
+            <mat-label>Periodicidad</mat-label>
+            <mat-select formControlName="periodicity">
+                <mat-option *ngFor="let periodicity of periodicity_options" [value]="periodicity.value">
+                    {{periodicity.description}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field class="col-12">
+            <mat-label>Estatus</mat-label>
+            <mat-select formControlName="status">
+                <mat-option *ngFor="let status of status_options" [value]="status.value">
+                    {{status.description}}
+                </mat-option>
+            </mat-select>
+          </mat-form-field>
+    </form>
+
+
+</div>
+<div mat-dialog-actions class="row d-flex justify-content-between p-4">
+  <div class="col-12 col-sm-6 col-md-6 d-flex justify-content-center">
+    <button mat-raised-button (click)="close()" class="w-100" color="primary">Cancelar</button>
+  </div>
+  <div class="col-12 col-sm-6 col-md-6 d-flex justify-content-center">
+    <button mat-raised-button (click)="register()" class="w-100" color="primary" [disabled]="service.status == 'INVALID' " >Registrar</button>
+  </div>
+
+</div>

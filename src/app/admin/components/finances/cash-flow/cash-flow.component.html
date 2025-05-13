@@ -1,0 +1,300 @@
+<div class="row">
+
+    <section class="row mt-2 p-2">
+        <h2 class="d-flex justify-content-center">Flujo De Caja</h2>
+    </section>
+
+    <section class="row p-2 mt-2">
+        <div class="col-12 col-sm-10 col-md-10">
+            <div class="row">
+                <mat-form-field class="col-12 col-sm-6 col-md-6">
+                    <mat-label>Desde</mat-label>
+                    <input matInput [matDatepicker]="picker" [(ngModel)]="filters.start_date">
+                    <mat-hint>MM/DD/AAAA</mat-hint>
+                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                    <button mat-icon-button matIconSuffix (click)="filters.start_date = '' ">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </mat-form-field>
+                <mat-form-field class="col-12 col-sm-6 col-md-6">
+                    <mat-label>Hasta</mat-label>
+                    <input matInput [matDatepicker]="picker1" [(ngModel)]="filters.end_date">
+                    <mat-hint>MM/DD/AAAA</mat-hint>
+                    <mat-datepicker-toggle matIconSuffix [for]="picker1"></mat-datepicker-toggle>
+                    <mat-datepicker #picker1></mat-datepicker>
+                    <button mat-icon-button matIconSuffix (click)="filters.end_date = '' ">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="col-12 col-sm-2 col-md-2 d-flex justify-content-center align-items-center">
+            <button mat-fab matTooltip="Buscar" color="primary" (click)=search()>
+                <mat-icon>search</mat-icon>
+            </button>
+        </div>
+
+
+    </section>
+
+    <section class="row p-3 mt-2">
+        <!--INCOMES-->
+        <div class="table-responsive mb-2">
+            <tr class="d-flex justify-content-center align-items-center">
+                <th style="font-size: 22px;">
+                    Ingresos
+                </th>
+
+                <th class="ml-2">
+                    <img src="../../../../../assets/images/trending_up.png" alt="" style="height: 40px; width: 40px;">
+                </th>
+            </tr>
+            <table class="table table-hover">
+
+                <thead>
+                    <tr>
+                        <th>Ordenes</th>
+
+                    </tr>
+                    <tr>
+                        <th>Id</th>
+                        <th>Fecha</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let order of orders">
+                        <td>{{order.id}}</td>
+                        <td>{{order.date}}</td>
+                        <td>{{order.total | currency }}</td>
+
+                    </tr>
+                    <tr>
+                        <td class="total text-success">
+                            <b>Total</b>
+                        </td>
+                        <td>
+
+                        </td>
+                        <td class="total text-success">
+                            <b>{{total_incomes | currency}}</b>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!--EXPENSES-->
+            <tr class="d-flex justify-content-center align-items-center mt-2">
+                <th style="font-size: 22px;">Egresos</th>
+                <th class="ml-2">
+                    <img src="../../../../../assets/images/trending_down.png" alt="" style="height: 40px; width: 40px;">
+                </th>
+            </tr>
+
+            <!--TIPS-->
+            <table class="table table-hover mt-2 p-2">
+
+                <thead>
+                    <tr>
+                        <th>Propinas</th>
+                    </tr>
+                    <tr>
+                        <th>Orden</th>
+                        <th>Fecha</th>
+                        <th>Propina</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let order of tips">
+                        <td>{{order.id}}</td>
+                        <td>{{order.date}}</td>
+                        <td>{{order.tip | currency }}</td>
+                    </tr>
+                    <tr>
+                        <td class="total text-danger">
+                            <b>Total</b>
+                        </td>
+                        <td>
+                        </td>
+                        <td class="total text-danger">
+                            <b>{{total_tips | currency}}</b>
+                        </td>
+                    </tr>
+                </tbody>
+
+            </table>
+
+            <!--EMPLOYEE SALARIES PAYMENTS-->
+            <table class="table table-hover mt-2 p-2" >
+
+                <thead>
+                    <tr>
+                        <th>Pagos De Empleados</th>
+                    </tr>
+                    <tr>
+                        <th>Id</th>
+                        <th>Usuario</th>
+                        <th>Fecha</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let payment of employee_salaries_payments">
+                        <td>{{payment.id}}</td>
+                        <td>{{payment.name}} {{payment.last_name}} {{payment.second_last_name}}</td>
+                        <td>{{payment.date}}</td>
+                        <td>{{payment.amount | currency }}</td>
+                    </tr>
+                    <tr>
+                        <td class="total text-danger">
+                            <b>Total</b>
+                        </td>
+                        <td>
+
+                        </td>
+                        <td>
+
+                        </td>
+                        <td class="total text-danger">
+                            <b>{{total_employee_salaries_payments | currency}}</b>
+                        </td>
+                    </tr>
+                </tbody>
+
+            </table>
+
+            <!--BUSSINES SERVICES PAYMENTS-->
+            <table class="table table-hover mt-2 p-2" >
+
+                <thead>
+                    <tr>
+                        <th>Pagos De Servicios</th>
+                    </tr>
+                    <tr>
+                        <th>Id</th>
+                        <th>Nombre</th>
+                        <th>Fecha</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let payment of bussines_services_payments">
+                        <td>{{payment.id}}</td>
+                        <td>{{payment.name}}</td>
+                        <td>{{payment.date}}</td>
+                        <td>{{payment.amount | currency }}</td>
+                    </tr>
+                    <tr>
+                        <td class="total text-danger">
+                            <b>Total</b>
+                        </td>
+                        <td>
+
+                        </td>
+                        <td>
+
+                        </td>
+                        <td class="total text-danger">
+                            <b>{{total_bussines_services_payments | currency}}</b>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!--MERCHANDISE PURCHASE-->
+            <table class="table table-hover mt-2 p-2">
+
+                <thead>
+                    <tr>
+                        <th>Compra De Mercancia</th>
+                    </tr>
+                    <tr>
+                        <th>Id</th>
+                        <th>Usuario</th>
+                        <th>Fecha</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let purchase of merchandises_purchases">
+                        <td>{{purchase.id}}</td>
+                        <td>{{purchase.name}} {{purchase.last_name}} {{purchase.second_last_name}}</td>
+                        <td>{{purchase.date}}</td>
+                        <td>{{purchase.total | currency }}</td>
+                    </tr>
+                    <tr>
+                        <td class="total text-danger">
+                            <b>Total</b>
+                        </td>
+                        <td>
+
+                        </td>
+                        <td>
+
+                        </td>
+                        <td class="total text-danger">
+                            <b>{{total_merchandise_purchases | currency}}</b>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+
+            <!--CASH FLOW BALANCE-->
+            <tr class="d-flex justify-content-center align-items-center mt-2 p-2">
+                <th style="font-size: 22px;">Balance</th>
+                <th class="ml-4 p-2">
+                    <img src="../../../../../assets/images/monitoring.png" alt="" style="height: 40px; width: 40px;">
+                </th>
+            </tr>
+
+            <!--BALANCE INFO-->
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Resumen</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th>Total De Ingresos</th>
+                        <td>{{total_incomes | currency}}</td>
+                    </tr>
+                    <tr>
+                        <th>Total Egresos</th>
+                        <td>{{total_expenses | currency}}</td>
+                    </tr>
+
+                    <tr>
+                        <th>Estatus</th>
+                        <td *ngIf="cash_flow.balance == 'POSITIVO' ; else balanceNegative "
+                            class="text-success estatus_amount">
+                            {{cash_flow.balance}}
+                        </td>
+                        <ng-template #balanceNegative>
+                            <td class="text-danger estatus_amount">{{cash_flow.balance}}</td>
+                        </ng-template>
+                    </tr>
+                    <tr *ngIf="total_incomes > total_expenses  ; else negativeTotalBalance ">
+                        <th class="total_balance">Total</th>
+                        <td class="total_balance text-success">{{cash_flow.total | currency}}</td>
+                    </tr>
+                    <ng-template #negativeTotalBalance>
+                        <tr>
+                            <th class="total_balance">Total</th>
+                            <td class="total_balance text-danger">{{cash_flow.total | currency}}</td>
+                        </tr>
+                    </ng-template>
+                </tbody>
+
+
+            </table>
+
+        </div>
+
+
+
+    </section>
+
+</div>

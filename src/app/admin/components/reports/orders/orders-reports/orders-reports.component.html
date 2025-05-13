@@ -1,0 +1,124 @@
+<div class="row d-flex justify-content-center">
+
+    <section class="row mt-2 p-2">
+        <h2 class="d-flex justify-content-center align-items-center">Reporte De Ventas</h2>
+    </section>
+
+    <!--FILTERS SECTION-->
+    <div class="row mt-2 p-2">
+
+        <!--FILTERS-->
+        <div class="col-12 col-md-10">
+            <div class="row d-flex justify-content-around">
+                <mat-form-field class="col-12 col-sm-4 col-md-4 mt-2 p-2">
+                    <mat-label>Tipo De Reporte</mat-label>
+                    <mat-select [(ngModel)]="filters.report_type">
+                        <mat-option *ngFor="let option of report_types_options" [value]="option.value">
+                            {{option.description}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field class="col-12 col-sm-4 col-md-4 mt-2 p-2">
+                    <mat-label>Desde</mat-label>
+                    <input matInput [matDatepicker]="picker" [(ngModel)]="filters.start_date">
+                    <mat-hint>MM/DD/AAAA</mat-hint>
+                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                    <button mat-icon-button matIconSuffix matTooltip="Limpiar" (click)="clean('start_date')">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                    <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+                <mat-form-field class="col-12 col-sm-4 col-md-4 mt-2 p-2">
+                    <mat-label>Hasta</mat-label>
+                    <input matInput [matDatepicker]="picker1" [(ngModel)]="filters.end_date">
+                    <mat-hint>MM/DD/AAAA</mat-hint>
+                    <mat-datepicker-toggle matIconSuffix [for]="picker1"></mat-datepicker-toggle>
+                    <button mat-icon-button matIconSuffix matTooltip="Limpiar" (click)="clean('end_date')">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                    <mat-datepicker #picker1></mat-datepicker>
+                </mat-form-field>
+            </div>
+
+        </div>
+
+        <!--SEARCH BUTTON-->
+        <div class="col-12 col-md-2 d-flex justify-content-around align-items-center ">
+            <button mat-fab matTooltip="Buscar" color="primary" (click)="search()" matTooltip="Buscar">
+                <mat-icon>search</mat-icon>
+            </button>
+        </div>
+    </div>
+
+
+    <!--FORMAT SELECTOR-->
+    <div class="row" *ngIf="data.length > 0">
+        <mat-form-field class="col-12 col-sm-4 col-md-4 mt-2 p-2">
+            <mat-label>Formato</mat-label>
+            <mat-select [(ngModel)]="filters.format">
+                <mat-option *ngFor="let format of format_options" [value]="format.value">
+                    {{format.description}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <div class="col-12 col-sm-4 col-md-4 mt-2 p-2 d-flex justify-content-center align-items-center">
+            <button mat-fab matTooltip="Exportar" color="primary" [disabled]="filters.format == '' " (click)="export()">
+                <mat-icon>print</mat-icon>
+            </button>
+        </div>
+    </div>
+
+
+
+    <!--PIPE FILTER SAOURCES-->
+    <div class="row mt-2 p-2">
+        <mat-form-field class="col-12 col-md-6">
+            <mat-label>Platillo</mat-label>
+            <input type="text" [(ngModel)]="saource_name" matInput>
+        </mat-form-field>
+    </div>
+    
+
+    <!--data DATA TABLE-->
+    <div class="row mt-2 p-2 w-100">
+        <div class="table-responsive" *ngIf="data.length > 0; else ordersNotFoundTemplate">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Nombre</th>
+                        <th>Cantidad vendida</th>
+                        <th>Total vendido</th>
+                        <th>Porcentaje correspondiente a los ingresos del periodo</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let info of data | saourcesPipe:saource_name;index as i">
+                        <td>{{info.id}}</td>
+                        <td> {{info.name}}</td>
+                        <td>{{info.sales_amount}}</td>
+                        <td>{{info.total_sold | currency}}</td>
+                        <td>{{info.equivalent_in_percentage }} % </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <b>{{total_sold | currency}} </b>
+                        </td>
+                        <td>
+                            <b>{{total_porcentage}} %</b>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <ng-template #ordersNotFoundTemplate>
+            <div class="col-12 d-flex justify-content-center">
+                <h2>No existen resultados de busqueda</h2>
+            </div>
+        </ng-template>
+    </div>
+</div>

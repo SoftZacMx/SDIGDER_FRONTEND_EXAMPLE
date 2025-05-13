@@ -1,0 +1,10 @@
+#pay_button,
+#update_order_button{
+    width: 300px;
+    height: 100px;
+}
+
+.sale_info_resum_data{
+    font-size: 24px;
+    font-weight: 700;
+}
